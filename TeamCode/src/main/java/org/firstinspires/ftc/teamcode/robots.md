@@ -2,7 +2,7 @@
 
 ## Light Robot 
 
-+ Omniwheels drivetrain
++ Diagonal omniwheels drivetrain
 + Pulley / Rack pinion (one  DC motor)
 + Claw with one or two servos
 + DC motor for spinning the carosel
