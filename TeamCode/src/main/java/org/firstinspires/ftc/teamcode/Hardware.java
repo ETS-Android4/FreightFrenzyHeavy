@@ -11,8 +11,8 @@ public class Hardware extends LinearOpMode {
     // Good Luck!
     //You should put constants here
 
-    protected DcMotor frontLeft, frontRight, backLeft, backRight, clawStrafe, clawRotate ;
-    protected Servo clawGrab;
+    protected DcMotor frontLeft, frontRight, backLeft, backRight, clawStrafe, clawRotate, carousel ;
+    protected Servo clawGrabL, clawGrabR;
 
     static final double     COUNTS_PER_MOTOR_REV    = 420 ;    // Needs to be fixed based on the motors
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -36,7 +36,9 @@ public class Hardware extends LinearOpMode {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         clawStrafe = hardwareMap.dcMotor.get("clawStrafe");
         clawRotate = hardwareMap.dcMotor.get("clawRotate");
-        clawGrab = hardwareMap.servo.get("clawGrab");
+        carousel = hardwareMap.dcMotor.get("carousel");
+        clawGrabL = hardwareMap.servo.get("clawGrabL");
+        clawGrabR = hardwareMap.servo.get("clawGrabR");
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -122,6 +124,18 @@ public class Hardware extends LinearOpMode {
 
 
         return 0;
+    }
+    public void strafe(double forwardLeftPower, double forwardRightPower) {
+        frontLeft.setPower(forwardRightPower);
+        backLeft.setPower(forwardLeftPower);
+        frontRight.setPower(forwardLeftPower);
+        backRight.setPower(forwardRightPower);
+    }
+    public void driveForward(final double power) {
+        strafe(power, power);
+    }
+    public void strafeRight(final double power) {
+        strafe(-power, power);
     }
     // Last thing is an empty runOpMode because it's a linearopmode
     @Override
