@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 public class Auto extends Hardware {
     // Fake values for now. Just showing how to call it
-    TensorflowDetector recongnizer = new TensorflowDetector(10,20, 1);
+    //TensorflowDetector recongnizer = new TensorflowDetector(10,20, 1);
 
     @Override
     public void runOpMode(){
         //Prep for tensorflow:
-        int place = recongnizer.recognizeObjects();
+        //int place = recongnizer.recognizeObjects();
         // Then move to the place.
 
         //Drive forward
