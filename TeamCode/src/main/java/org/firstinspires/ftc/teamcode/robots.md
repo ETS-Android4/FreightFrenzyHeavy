@@ -9,7 +9,8 @@
 
 ## Heavy Robot
 
-+ Friction wheels on the front omniwheels on the back
-+ Rack and pinion back and forth for the claw (one DC motor)
-+ Hinge arm (servo)
-+
++ Omniwheels on half, grippy wheels on half
++ Rack for moving arm horizontally. (Should get a "virtual endstop")
++ DC motor for rotating the arm (Likely needs acceleration control of some sort)
++ Claw with two servos
++ DC motors for spinning the carosel

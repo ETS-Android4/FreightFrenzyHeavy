@@ -15,7 +15,7 @@ public class Hardware extends LinearOpMode {
     protected Servo clawGrabL, clawGrabR;
 
     static final double     COUNTS_PER_MOTOR_REV    = 420 ;    // Needs to be fixed based on the motors
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference. Not sure what it is
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -44,23 +44,30 @@ public class Hardware extends LinearOpMode {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        clawStrafe.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        clawRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        clawStrafe.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        clawRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         //Use encoders
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        clawStrafe.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        clawRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Status:", "Setup Complete");
         telemetry.update();
     }
-    // Pinchas should make an encoder drive
+
     public int encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
         // stop and reset the encoders? Maybe not. Might want to get position and add from there
         double newFRTarget;
@@ -76,10 +83,10 @@ public class Hardware extends LinearOpMode {
             newBLTarget = backLeft.getCurrentPosition()     +  (backLeftInches * COUNTS_PER_INCH);
             newBRTarget = backRight.getCurrentPosition()     + (backRightInches * COUNTS_PER_INCH);
 
-            backRight.setTargetPosition((int)(backRightInches));
-            frontRight.setTargetPosition((int)(frontRightInches));
-            frontLeft.setTargetPosition((int)(frontLeftInches));
-            backLeft.setTargetPosition((int)(backLeftInches));
+            backRight.setTargetPosition((int) newBRTarget);
+            frontRight.setTargetPosition((int) newFRTarget);
+            frontLeft.setTargetPosition((int) newFLTarget);
+            backLeft.setTargetPosition((int) newBLTarget);
 
             // Run to position
             frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -133,6 +140,7 @@ public class Hardware extends LinearOpMode {
     public void driveForward(final double power) {
         setDrivingPower(power, power);
     }
+
     // Last thing is an empty runOpMode because it's a linearopmode
     @Override
     public void runOpMode() throws InterruptedException {
