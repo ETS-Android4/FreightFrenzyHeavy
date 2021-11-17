@@ -130,6 +130,91 @@ public class Hardware extends LinearOpMode {
         return 0;
     }
 
+     public int encoderDriveAcceleration(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches, int acceleration){
+        // stop and reset the encoders? Maybe not. Might want to get position and add from there
+        double newFRTarget, newFLTarget, newBLTarget, newBRTarget, FRCounts, FLCounts, BLCounts, BRCounts;
+
+        if (opModeIsActive()){
+            //calculate and set target positions
+
+            newFRTarget = frontRight.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
+            newFLTarget = frontLeft.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
+            newBLTarget = backLeft.getCurrentPosition()     +  (backLeftInches * COUNTS_PER_INCH);
+            newBRTarget = backRight.getCurrentPosition()     + (backRightInches * COUNTS_PER_INCH);
+
+            backRight.setTargetPosition((int) newBRTarget);
+            frontRight.setTargetPosition((int) newFRTarget);
+            frontLeft.setTargetPosition((int) newFLTarget);
+            backLeft.setTargetPosition((int) newBLTarget);
+
+            // Run to position
+            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            // Trying to add some acceleration control through powers, which
+            // should help with encoder accuracy. 
+            FRCounts = (frontRightInches * COUNTS_PER_INCH);
+            FLCounts = (frontLeftInches * COUNTS_PER_INCH);
+            BRCounts = (backRightInches * COUNTS_PER_INCH);
+            BLCounts = (backLeftInches * COUNTS_PER_INCH);
+
+
+
+
+            runtime.reset();
+            //start at low power. In the loop we will raise and lower it\
+
+            frontRight.setPower(0.1);
+            frontLeft.setPower(0.1);
+            backRight.setPower(0.1);
+            backLeft.setPower(0.1);
+
+            //Right now I'm just calculating for all together. Very untested at the moment. Will work more later.
+            boolean accerating = true;
+            double powerChange, ticksToFullPower;
+            powerChange = maxPower - 0.1;
+            ticksToFullPower = acceleration * powerChange * 10; 
+            while (opModeIsActive() &&
+                    (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
+                    // Split the total length in half, have it accelerate until maxPower durring the first half, and decelerate in the second half
+                    // We have a set acceleration value. Calculate how long to accelerate for based on that.
+
+                    // We have to situations. One where there is a coast at full aceleration and one where there is not.
+                    // fix ticksToFullPower
+                    if (frontLeft.getCurrentPosition() < ticksToFullPower && accerating == true  && frontLeft.getPower() < maxPower){
+                        // Every 100 steps, increase accelaration 
+                        if (frontLeft.getCurrentPosition() % acceleration == 0){
+
+                            frontLeft.setPower(frontLeft.getPower() + 0.1);
+                        }
+                    }
+
+                    
+
+                    
+
+            }
+            // Set Zero Power
+            setDrivingPower(0,0);
+
+            // Go back to Run_Using_Encoder
+            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+
+
+
+        }
+
+
+        return 0;
+    }
     public void setDrivingPower(double leftPower, double rightPower) {
         frontLeft.setPower(leftPower);
         backLeft.setPower(leftPower);
