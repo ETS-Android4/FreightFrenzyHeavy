@@ -105,10 +105,7 @@ public class Hardware extends LinearOpMode {
 
             }
             // Set Zero Power
-            frontRight.setPower(0);
-            frontLeft.setPower(0);
-            backRight.setPower(0);
-            backLeft.setPower(0);
+            setDrivingPower(0,0);
 
             // Go back to Run_Using_Encoder
             frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -125,17 +122,16 @@ public class Hardware extends LinearOpMode {
 
         return 0;
     }
-    public void strafe(double forwardLeftPower, double forwardRightPower) {
-        frontLeft.setPower(forwardRightPower);
-        backLeft.setPower(forwardLeftPower);
-        frontRight.setPower(forwardLeftPower);
-        backRight.setPower(forwardRightPower);
+
+    public void setDrivingPower(double leftPower, double rightPower) {
+        frontLeft.setPower(leftPower);
+        backLeft.setPower(leftPower);
+        frontRight.setPower(rightPower);
+        backRight.setPower(rightPower);
     }
+
     public void driveForward(final double power) {
-        strafe(power, power);
-    }
-    public void strafeRight(final double power) {
-        strafe(-power, power);
+        setDrivingPower(power, power);
     }
     // Last thing is an empty runOpMode because it's a linearopmode
     @Override
