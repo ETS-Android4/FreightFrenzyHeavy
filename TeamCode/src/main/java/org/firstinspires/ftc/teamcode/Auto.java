@@ -8,11 +8,16 @@ public class Auto extends Hardware {
     // Fake values for now. Just showing how to call it
     //TensorflowDetector recognizer = new TensorflowDetector(10,20, 1);
     public int delaySeconds = 0;
+    public String startingPosition = "Carousel";
+    //Yishai - what other parameters should we be able to adjust?
 
     @Override
     public void runOpMode(){
         hardwareSetup();
         selectParameters();
+        //Daniel
+        //Display "Status: Waiting for start"
+        //Display all parameter values (so far delaySeconds and startingPosition)
         waitForStart();
 
         //Prep for tensorflow:
@@ -43,7 +48,7 @@ public class Auto extends Hardware {
                 telemetry.addLine("Select " + currentParameter);
 
                 switch (currentParameter) {
-                    case "Delay": {
+                    case "Delay":
                         if (gamepad1.dpad_up) {
                             delaySeconds++;
                         }
@@ -53,10 +58,13 @@ public class Auto extends Hardware {
                         delaySeconds = Range.clip(delaySeconds, 0, 30);
                         telemetry.addLine("delaySeconds = " + delaySeconds);
                         if (gamepad1.x) {
-                            currentParameter = "Delay";
+                            currentParameter = "Delay"; //Yishai
                         }
                         break;
-                    }
+                    case "Position":
+                        //Pinchus
+                        //Choose between "Carousel" and "Warehouse"
+                        break;
                 }
                 //Output to telemetry and sleep
                 telemetry.update();
