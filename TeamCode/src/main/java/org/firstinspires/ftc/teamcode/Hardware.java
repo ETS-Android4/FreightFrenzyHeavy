@@ -68,6 +68,53 @@ public class Hardware extends LinearOpMode {
         telemetry.update();
     }
 
+    public void setDrivingPower(double leftPower, double rightPower) {
+        frontLeft.setPower(leftPower);
+        backLeft.setPower(leftPower);
+        frontRight.setPower(rightPower);
+        backRight.setPower(rightPower);
+    }
+
+    public void driveForward(final double power) {
+        setDrivingPower(power, power);
+    }
+
+    public void deliverDuck() {
+        final double CAROUSEL_POWER = 0.5; //Needs to be adjusted
+        final double INCHES_TO_TURN = 50; // Just over the circumference of the carousel
+        final double WHEEL_DIAMETER_INCHES = 4; //Might need to be adjusted
+        final double REVOLUTIONS_TO_TURN = INCHES_TO_TURN / (WHEEL_DIAMETER_INCHES * Math.PI);
+        singleMotorEncoderDrive(carousel, CAROUSEL_POWER, REVOLUTIONS_TO_TURN, 10);
+    }
+
+    public void singleMotorEncoderDrive (DcMotor motor, double power, double revolutions, int timeoutS) {
+        double newMotorTarget;
+        if(opModeIsActive()) {
+            //calculate target positions
+            newMotorTarget = motor.getCurrentPosition() + revolutions * COUNTS_PER_MOTOR_REV;
+            //set target positions
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setTargetPosition((int) newMotorTarget);
+            //restart timer and set power
+            runtime.reset();
+            motor.setPower(power);
+            //Display telemetry
+            telemetry.addData("Status", "Moving motor to position");
+            telemetry.update();
+            //loop until the motor reaches target position
+            while (opModeIsActive() && motor.isBusy() && runtime.seconds() < timeoutS) {
+                // do nothing
+                idle();
+            }
+            //Stop motor
+            motor.setPower(0);
+            //Get out of position mode
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //Clear Telemetry
+            telemetry.update();
+        }
+    }
+
     public int encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
         // stop and reset the encoders? Maybe not. Might want to get position and add from there
         double newFRTarget;
@@ -128,17 +175,6 @@ public class Hardware extends LinearOpMode {
 
 
         return 0;
-    }
-
-    public void setDrivingPower(double leftPower, double rightPower) {
-        frontLeft.setPower(leftPower);
-        backLeft.setPower(leftPower);
-        frontRight.setPower(rightPower);
-        backRight.setPower(rightPower);
-    }
-
-    public void driveForward(final double power) {
-        setDrivingPower(power, power);
     }
 
     // Last thing is an empty runOpMode because it's a linearopmode
