@@ -13,12 +13,20 @@ public class Hardware extends LinearOpMode {
 
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawStrafe, clawRotate, carousel ;
     protected Servo clawGrabL, clawGrabR;
+    int armLocation = 0;
+    int armRotation = 0;
 
     static final double     COUNTS_PER_MOTOR_REV    = 420 ;    // Needs to be fixed based on the motors
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference. Not sure what it is
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
+    // TODO: Needs tuning
+    static final double ARM_MOVE_REVOLUTIONS = 5;
+    static final double ARM_ROTATE_REVOLUTIONS = 5;
+
+
+
 
     public ElapsedTime runtime = new ElapsedTime();
 
@@ -66,6 +74,27 @@ public class Hardware extends LinearOpMode {
 
         telemetry.addData("Status:", "Setup Complete");
         telemetry.update();
+    }
+
+    public void moveArmToOtherSide(){
+        if (armLocation == 0){
+            singleMotorEncoderDrive(clawStrafe,0.5,ARM_MOVE_REVOLUTIONS,10);
+            armLocation = 1;
+        } else{
+            singleMotorEncoderDrive(clawStrafe,0.5, - ARM_MOVE_REVOLUTIONS,10);
+            armLocation = 0;
+        }
+    }
+
+    public void rotateArm(){
+        // Will likely need acceleration control
+        if (armRotation == 0){
+            singleMotorEncoderDrive(clawStrafe,0.5,ARM_ROTATE_REVOLUTIONS,10);
+            armRotation = 1;
+        } else{
+            singleMotorEncoderDrive(clawStrafe,0.5, - ARM_ROTATE_REVOLUTIONS,10);
+            armRotation = 0;
+        }
     }
 
     public void setDrivingPower(double leftPower, double rightPower) {
