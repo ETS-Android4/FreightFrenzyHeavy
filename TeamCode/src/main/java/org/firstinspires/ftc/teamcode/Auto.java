@@ -19,9 +19,9 @@ public class Auto extends Hardware {
         //Daniel
         //Display "Status: Waiting for start"
         //Display all parameter values (so far delaySeconds and startingPosition)
-        telemtry.addData("status", "Status: " + carouselStatus);
-        telemtry.addData("delaySeconds: ", delaySeconds);
-        telemtry.addData("startingPosition: ", startingPosition);
+        telemetry.addData("status", "Status: " + carouselStatus);
+        telemetry.addData("delaySeconds: ", delaySeconds);
+        telemetry.addData("startingPosition: ", startingPosition);
         telemetry.update();
 
         waitForStart();
