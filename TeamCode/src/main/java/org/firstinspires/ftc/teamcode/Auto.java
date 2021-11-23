@@ -9,7 +9,8 @@ public class Auto extends Hardware {
     TensorflowDetector recognizer = new TensorflowDetector(10,20);
     public int delaySeconds = 0;
     public String startingPosition = "Carousel";
-    //Yishai - what other parameters should we be able to adjust?
+    public int duckStartLocation = 1;
+    public int drivers = 1;
     public String carouselStatus = "Waiting for start"
     @Override
     public void runOpMode(){
@@ -63,7 +64,7 @@ public class Auto extends Hardware {
                         delaySeconds = Range.clip(delaySeconds, 0, 30);
                         telemetry.addLine("delaySeconds = " + delaySeconds);
                         if (gamepad1.x) {
-                            currentParameter = "Delay"; //Yishai
+                            currentParameter = "Position"; 
                         }
                         break;
                     case "Position":
