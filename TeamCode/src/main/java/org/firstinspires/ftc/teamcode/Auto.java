@@ -10,7 +10,7 @@ public class Auto extends Hardware {
     public int delaySeconds = 0;
     public String startingPosition = "Carousel";
     //Yishai - what other parameters should we be able to adjust?
-
+    public String carouselStatus = "Waiting for start"
     @Override
     public void runOpMode(){
         hardwareSetup();
@@ -18,6 +18,11 @@ public class Auto extends Hardware {
         //Daniel
         //Display "Status: Waiting for start"
         //Display all parameter values (so far delaySeconds and startingPosition)
+        telemtry.addData("status", "Status: " + carouselStatus);
+        telemtry.addData("delaySeconds: ", delaySeconds);
+        telemtry.addData("startingPosition: ", startingPosition);
+        telemetry.update();
+
         waitForStart();
 
         //Tensorflow recognize objects
