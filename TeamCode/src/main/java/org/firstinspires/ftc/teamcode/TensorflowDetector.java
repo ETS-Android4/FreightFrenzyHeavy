@@ -37,7 +37,6 @@ public class TensorflowDetector extends LinearOpMode {
         initVuforia();
         initTfod();
 
-        this.leftBound = leftBound;
 
 
         /**
@@ -61,10 +60,14 @@ public class TensorflowDetector extends LinearOpMode {
 
 
     public int recognizeObjects(){
+
         int mostConfidant = 0;
         int confidencePlace = 0;
+
         if (this.tfod != null) {
+
             List<Recognition> updatedRecognitions = tfod.getRecognitions();
+
             if (updatedRecognitions != null) {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
                 telemetry.update();

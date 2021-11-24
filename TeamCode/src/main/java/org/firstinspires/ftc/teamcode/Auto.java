@@ -11,7 +11,7 @@ public class Auto extends Hardware {
     public String startingPosition = "Carousel";
     public int duckStartLocation = 1;
     public int drivers = 1;
-    public String carouselStatus = "Waiting for start"
+    public String carouselStatus = "Waiting for start";
     @Override
     public void runOpMode(){
         hardwareSetup();
