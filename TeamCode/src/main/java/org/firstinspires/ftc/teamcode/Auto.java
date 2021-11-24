@@ -7,11 +7,12 @@ import com.qualcomm.robotcore.util.Range;
 public class Auto extends Hardware {
     // Fake values for now. Just showing how to call it
     TensorflowDetector recognizer = new TensorflowDetector(10,20);
-    public int delaySeconds = 0;
+
+    public int delaySeconds = 0; //seconds to wait for alliance
     public String startingPosition = "Carousel";
-    public int duckStartLocation = 1;
-    public int drivers = 1;
-    public String carouselStatus = "Waiting for start";
+    public int duckStartLocation = 1; //ilegal
+    public int drivers = 1; //number of drivers on team
+    public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
     @Override
     public void runOpMode(){
         hardwareSetup();
@@ -50,7 +51,7 @@ public class Auto extends Hardware {
         String currentParameter = "Delay";
         boolean selection = true;
         while(selection) {
-            while (!gamepad1.a) {
+            while (!gamepad1.a) { //pressing 'a' will end the selection
                 telemetry.addLine("Select " + currentParameter);
 
                 switch (currentParameter) {
@@ -63,7 +64,7 @@ public class Auto extends Hardware {
                         }
                         delaySeconds = Range.clip(delaySeconds, 0, 30);
                         telemetry.addLine("delaySeconds = " + delaySeconds);
-                        if (gamepad1.x) {
+                        if (gamepad1.x) { // pressing 'x' sends selector to the next variable
                             currentParameter = "Position"; 
                         }
                         break;
