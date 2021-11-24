@@ -13,6 +13,7 @@ public class Hardware extends LinearOpMode {
 
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawStrafe, clawRotate, carousel ;
     protected Servo clawGrabL, clawGrabR;
+    Claw claw;
     int armLocation = 0;
     int armRotation = 0;
 
@@ -24,6 +25,10 @@ public class Hardware extends LinearOpMode {
     // TODO: Needs tuning
     static final double ARM_MOVE_REVOLUTIONS = 5;
     static final double ARM_ROTATE_REVOLUTIONS = 5;
+    static final double CAROUSEL_POWER = 0.5; //Needs to be adjusted
+    static final double INCHES_TO_TURN = 50; // Just over the circumference of the carousel
+    static final double CAROUSEL_DIAMETER_INCHES = 4; //Might need to be adjusted
+    static final double REVOLUTIONS_TO_TURN = INCHES_TO_TURN / (CAROUSEL_DIAMETER_INCHES * Math.PI);
 
 
 
@@ -74,6 +79,8 @@ public class Hardware extends LinearOpMode {
 
         telemetry.addData("Status:", "Setup Complete");
         telemetry.update();
+
+        Claw claw = new Claw(clawGrabL, clawGrabR);
     }
 
     public void moveArmToOtherSide(){
@@ -86,8 +93,10 @@ public class Hardware extends LinearOpMode {
         }
     }
 
-    public void rotateArm(){
+    // TODO: Arm functions redo.
+    public void fullRotateArm(){
         // Will likely need acceleration control
+
         if (armRotation == 0){
             singleMotorEncoderDrive(clawStrafe,0.5,ARM_ROTATE_REVOLUTIONS,10);
             armRotation = 1;
@@ -95,6 +104,14 @@ public class Hardware extends LinearOpMode {
             singleMotorEncoderDrive(clawStrafe,0.5, - ARM_ROTATE_REVOLUTIONS,10);
             armRotation = 0;
         }
+    }
+
+    public void clawOpen(){
+        claw.setPosition(1);
+    }
+
+    public void clawClose(){
+        claw.grabCube();
     }
 
     public void setDrivingPower(double leftPower, double rightPower) {
@@ -109,10 +126,6 @@ public class Hardware extends LinearOpMode {
     }
 
     public void deliverDuck() {
-        final double CAROUSEL_POWER = 0.5; //Needs to be adjusted
-        final double INCHES_TO_TURN = 50; // Just over the circumference of the carousel
-        final double WHEEL_DIAMETER_INCHES = 4; //Might need to be adjusted
-        final double REVOLUTIONS_TO_TURN = INCHES_TO_TURN / (WHEEL_DIAMETER_INCHES * Math.PI);
         singleMotorEncoderDrive(carousel, CAROUSEL_POWER, REVOLUTIONS_TO_TURN, 10);
     }
 
@@ -152,8 +165,8 @@ public class Hardware extends LinearOpMode {
         double newBRTarget;
 
         if (opModeIsActive()){
-            //calculate and set target positions
 
+            //calculate and set target positions
             newFRTarget = frontRight.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
             newFLTarget = frontLeft.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
             newBLTarget = backLeft.getCurrentPosition()     +  (backLeftInches * COUNTS_PER_INCH);
@@ -170,7 +183,6 @@ public class Hardware extends LinearOpMode {
             backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
             // Set powers. For now I'm setting to maxPower, so be careful.
             // In the future I'd like to add some acceleration control through powers, which
             // should help with encoder accuracy. Stay tuned.
@@ -180,11 +192,10 @@ public class Hardware extends LinearOpMode {
             backRight.setPower(maxPower);
             backLeft.setPower(maxPower);
 
-            //
-
             while (opModeIsActive() &&
                     (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
                     // Do nothing
+                idle();
 
             }
             // Set Zero Power
@@ -195,14 +206,7 @@ public class Hardware extends LinearOpMode {
             frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-
-
         }
-
-
         return 0;
     }
 

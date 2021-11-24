@@ -21,7 +21,7 @@ public class TeleOp extends Hardware{
                 deliverDuck();
             }
             if (gamepad1.x){
-                rotateArm();
+                fullRotateArm();
             }
 
 
