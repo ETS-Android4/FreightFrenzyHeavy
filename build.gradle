@@ -67,7 +67,7 @@ task extractJavadoc {
     }
 }
 tasks.withType(JavaExec) {
-    jvmArgs = ['-Xms1g', '-Xmx1g']
+    jvmArgs = ['-Xms4g', '-Xmx4g']
 }
 
 
