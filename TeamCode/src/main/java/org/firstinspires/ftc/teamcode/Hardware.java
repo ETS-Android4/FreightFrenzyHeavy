@@ -25,10 +25,13 @@ public class Hardware extends LinearOpMode {
     // TODO: Needs tuning
     static final double ARM_MOVE_REVOLUTIONS = 5;
     static final double ARM_ROTATE_REVOLUTIONS = 5;
-    static final double CAROUSEL_POWER = 0.5; //Needs to be adjusted
+    static final double CAROUSEL_POWER = 0.5;
+    //Use the following if the carousel motor is not encoded
+    static final long CAROUSEL_MILLIS = 1000;
+    /* Use the following if the carousel motor is encoded
     static final double INCHES_TO_TURN = 50; // Just over the circumference of the carousel
     static final double CAROUSEL_DIAMETER_INCHES = 4; //Might need to be adjusted
-    static final double REVOLUTIONS_TO_TURN = INCHES_TO_TURN / (CAROUSEL_DIAMETER_INCHES * Math.PI);
+    static final double REVOLUTIONS_TO_TURN = INCHES_TO_TURN / (CAROUSEL_DIAMETER_INCHES * Math.PI); */
 
 
 
@@ -37,19 +40,44 @@ public class Hardware extends LinearOpMode {
 
 
     // Setup your drivetrain (Define your motors etc.)
-    public void hardwareSetup() {
+    public void hardwareSetup(boolean isMirrorDriving, boolean isBlueAlliance) {
 
+        // Initialize and set direction of driving motors
+        if (!isMirrorDriving) {
+            frontLeft = hardwareMap.dcMotor.get("frontLeft");
+            frontRight = hardwareMap.dcMotor.get("frontRight");
+            backRight = hardwareMap.dcMotor.get("backRight");
+            backLeft = hardwareMap.dcMotor.get("backLeft");
 
+            //Set Driving Directions
+            frontLeft.setDirection(DcMotor.Direction.REVERSE);
+            backLeft.setDirection(DcMotor.Direction.REVERSE);
+            frontRight.setDirection(DcMotor.Direction.FORWARD);
+            backRight.setDirection(DcMotor.Direction.FORWARD);
+        } else {
+            frontRight = hardwareMap.dcMotor.get("frontLeft");
+            frontLeft = hardwareMap.dcMotor.get("frontRight");
+            backLeft = hardwareMap.dcMotor.get("backRight");
+            backRight = hardwareMap.dcMotor.get("backLeft");
 
-        // Define your methods of driving (Encoder drive, tank drive, etc.
+            //Set Driving Directions
+            frontRight.setDirection(DcMotor.Direction.REVERSE);
+            backRight.setDirection(DcMotor.Direction.REVERSE);
+            frontLeft.setDirection(DcMotor.Direction.FORWARD);
+            backLeft.setDirection(DcMotor.Direction.FORWARD);
+        }
 
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        frontRight = hardwareMap.dcMotor.get("frontRight");
-        backRight = hardwareMap.dcMotor.get("backRight");
-        backLeft = hardwareMap.dcMotor.get("backLeft");
+        //Initialize and set direction of carousel motor
+        carousel = hardwareMap.dcMotor.get("carousel");
+        //TODO: flip the direction if it's going backwards
+        if(isBlueAlliance) {
+            carousel.setDirection(DcMotor.Direction.FORWARD);
+        } else {
+            carousel.setDirection(DcMotor.Direction.REVERSE);
+        }
+
         clawStrafe = hardwareMap.dcMotor.get("clawStrafe");
         clawRotate = hardwareMap.dcMotor.get("clawRotate");
-        carousel = hardwareMap.dcMotor.get("carousel");
         clawGrabL = hardwareMap.servo.get("clawGrabL");
         clawGrabR = hardwareMap.servo.get("clawGrabR");
 
@@ -59,6 +87,7 @@ public class Hardware extends LinearOpMode {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         clawStrafe.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         clawRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -126,7 +155,16 @@ public class Hardware extends LinearOpMode {
     }
 
     public void deliverDuck() {
-        singleMotorEncoderDrive(carousel, CAROUSEL_POWER, REVOLUTIONS_TO_TURN, 10);
+        //Use the following if the motor is not encoded
+        carousel.setPower(CAROUSEL_POWER);
+        telemetry.addData("Status","Delivering Duck/TSE");
+        telemetry.update();
+        sleep(CAROUSEL_MILLIS);
+        carousel.setPower(0);
+        telemetry.addData("Status","Finished Delivery");
+        telemetry.update();
+        //Use the following if the motor is encoded
+        //singleMotorEncoderDrive(carousel, CAROUSEL_POWER, REVOLUTIONS_TO_TURN, 10);
     }
 
     public void singleMotorEncoderDrive (DcMotor motor, double power, double revolutions, int timeoutS) {

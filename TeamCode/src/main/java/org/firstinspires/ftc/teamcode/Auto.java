@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 public class Auto extends Hardware {
     // Fake values for now. Just showing how to call it
     TensorflowDetector recognizer = new TensorflowDetector(10,20);
-
+    public boolean isBlueAlliance = true;
     public int delaySeconds = 0; //seconds to wait for alliance
     public String startingPosition = "Carousel";
     public int duckStartLocation = 1; //ilegal
@@ -15,7 +15,7 @@ public class Auto extends Hardware {
     public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
     @Override
     public void runOpMode(){
-        hardwareSetup();
+        hardwareSetup(!isBlueAlliance, isBlueAlliance);
         selectParameters();
         //Daniel
         //Display "Status: Waiting for start"
