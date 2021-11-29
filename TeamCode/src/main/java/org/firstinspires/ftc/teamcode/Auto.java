@@ -13,11 +13,12 @@ public class Auto extends Hardware {
     public int duckStartLocation = 1; //ilegal
     public int drivers = 1; //number of drivers on team
     public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
+
     @Override
     public void runOpMode(){
         hardwareSetup(!isBlueAlliance, isBlueAlliance);
         selectParameters();
-        //Daniel
+
         //Display "Status: Waiting for start"
         //Display all parameter values (so far delaySeconds and startingPosition)
         telemetry.addData("status", "Status: " + carouselStatus);
@@ -30,6 +31,9 @@ public class Auto extends Hardware {
         //Tensorflow recognize objects
         int place = recognizer.recognizeObjects();
         // Then move to the place.
+        //  Left most is bottom, middle is middle, and right is top
+        // Things to do: Carosel, Preloaded Box, move to place for points.
+
         //Drive forward
         telemetry.addData("Status", "Driving Forward");
         telemetry.update();
@@ -44,16 +48,18 @@ public class Auto extends Hardware {
         driveForward(-0.5);
         sleep(1000);
         driveForward(0);
+
     }
 
     //Controls: Directional pad to select, x to change mode, a to enter
+    // @Emmet I don't understand what you are doing here so I'll let you do it. But it looks like
+    // you should check what's in what loop.
     public void selectParameters() {
         String currentParameter = "Delay";
         boolean selection = true;
         while(selection) {
             while (!gamepad1.a) { //pressing 'a' will end the selection
                 telemetry.addLine("Select " + currentParameter);
-
                 switch (currentParameter) {
                     case "Delay":
                         if (gamepad1.dpad_up) {
