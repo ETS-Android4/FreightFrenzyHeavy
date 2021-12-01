@@ -12,20 +12,20 @@ public class Auto extends Hardware {
     public String startingPosition = "Carousel";
     public int duckStartLocation = 1; //ilegal
     public int drivers = 1; //number of drivers on team
-    public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
+    //public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
     @Override
     public void runOpMode(){
+        //Mirror driving wheels and flip carousel direction only if we are the red alliance
         hardwareSetup(!isBlueAlliance, isBlueAlliance);
         selectParameters();
-        //Daniel
-        //Display "Status: Waiting for start"
+        telemetry.addData("Status","Waiting for Start");
         //Display all parameter values (so far delaySeconds and startingPosition)
-        telemetry.addData("status", "Status: " + carouselStatus);
         telemetry.addData("delaySeconds: ", delaySeconds);
         telemetry.addData("startingPosition: ", startingPosition);
         telemetry.update();
 
         waitForStart();
+        telemetry.update();
 
         //Tensorflow recognize objects
         int place = recognizer.recognizeObjects();
@@ -49,37 +49,39 @@ public class Auto extends Hardware {
     //Controls: Directional pad to select, x to change mode, a to enter
     public void selectParameters() {
         String currentParameter = "Delay";
-        boolean selection = true;
-        while(selection) {
-            while (!gamepad1.a) { //pressing 'a' will end the selection
-                telemetry.addLine("Select " + currentParameter);
+        while (!gamepad1.a) { //pressing 'a' will end the selection
+            telemetry.addLine("Select " + currentParameter);
 
-                switch (currentParameter) {
-                    case "Delay":
-                        if (gamepad1.dpad_up) {
-                            delaySeconds++;
-                        }
-                        if (gamepad1.dpad_down) {
-                            delaySeconds--;
-                        }
-                        delaySeconds = Range.clip(delaySeconds, 0, 30);
-                        telemetry.addLine("delaySeconds = " + delaySeconds);
-                        if (gamepad1.x) { // pressing 'x' sends selector to the next variable
-                            currentParameter = "Position"; 
-                        }
-                        break;
-                    case "Position":
-                        //Pinchus
-                        //Choose between "Carousel" and "Warehouse"
-                        break;
-                }
-                //Output to telemetry and sleep
-                telemetry.update();
-                sleep(200);
+            switch (currentParameter) {
+                case "Delay":
+                    if (gamepad1.dpad_up) {
+                        delaySeconds++;
+                    }
+                    if (gamepad1.dpad_down) {
+                        delaySeconds--;
+                    }
+                    delaySeconds = Range.clip(delaySeconds, 0, 30);
+                    telemetry.addLine("delaySeconds = " + delaySeconds);
+                    if (gamepad1.x) { // pressing 'x' sends selector to the next variable
+                        currentParameter = "Starting Position";
+                    }
+                    break;
+                case "Starting Position":
+                    //Choose between "Carousel" and "Warehouse"
+                    if (gamepad1.dpad_up) {
+                        startingPosition = "Carousel";
+                    } else if (gamepad1.dpad_down) {
+                        startingPosition = "Warehouse";
+                    }
+                    telemetry.addLine("startingPosition = " + startingPosition);
+                    if(gamepad1.x) {
+                        currentParameter = "Delay";
+                    }
+                    break;
             }
-        }
-        if (gamepad1.a){
-            selection = false;
+            //Output to telemetry and sleep
+            telemetry.update();
+            sleep(200);
         }
     }
 
