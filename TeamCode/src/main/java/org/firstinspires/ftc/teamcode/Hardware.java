@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -29,9 +30,9 @@ public class Hardware extends LinearOpMode {
     //Use the following if the carousel motor is not encoded
     static final long CAROUSEL_MILLIS = 1000;
     /* Use the following if the carousel motor is encoded
-    static final double INCHES_TO_TURN = 50; // Just over the circumference of the carousel
-    static final double CAROUSEL_DIAMETER_INCHES = 4; //Might need to be adjusted
-    static final double REVOLUTIONS_TO_TURN = INCHES_TO_TURN / (CAROUSEL_DIAMETER_INCHES * Math.PI); */
+    static final double CAROUSEL_INCHES_TO_TURN = 50; // Just over the circumference of the carousel
+    static final double CAROUSEL_DIAMETER_INCHES = 3; //Might need to be adjusted
+    static final double CAROUSEL_MOTOR_REVOLUTIONS = CAROUSEL_INCHES_TO_TURN / (CAROUSEL_DIAMETER_INCHES * Math.PI); */
 
 
 
@@ -78,8 +79,18 @@ public class Hardware extends LinearOpMode {
 
         clawStrafe = hardwareMap.dcMotor.get("clawStrafe");
         clawRotate = hardwareMap.dcMotor.get("clawRotate");
-        clawGrabL = hardwareMap.servo.get("clawGrabL");
-        clawGrabR = hardwareMap.servo.get("clawGrabR");
+        carousel = hardwareMap.dcMotor.get("carousel");
+        clawGrabL = hardwareMap.servo.get("clawL");
+        clawGrabR = hardwareMap.servo.get("clawR");
+
+        //set motor directions
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        clawStrafe.setDirection(DcMotor.Direction.FORWARD);
+        clawRotate.setDirection(DcMotor.Direction.FORWARD);
+        carousel.setDirection(DcMotor.Direction.FORWARD);
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -98,7 +109,7 @@ public class Hardware extends LinearOpMode {
         clawRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        //Use encoders
+        //Use encoders to regulate speed
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

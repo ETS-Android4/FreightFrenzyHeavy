@@ -6,16 +6,27 @@ public class TeleOp extends Hardware{
     
     @Override
     public void runOpMode() throws InterruptedException {
-        //Initialize hardware devices
+
+        telemetry.addData("Status","Intializing");
+        telemetry.update();
         hardwareSetup(false, getIsBlueAlliance());
 
-        telemetry.addData("Status:","Initialized");
+        telemetry.addData("Status","Waiting for Start");
         telemetry.update();
+        //Wait until the play button is pressed
         waitForStart();
+
+        telemetry.addData("Status","Match in Progress");
+        telemetry.update();
         // I'm doing random controls for now. Adjust as needed. Just want to have this basically written.
         while (opModeIsActive()){
-            // Tank drive
-            setDrivingPower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
+            // Tank drive? Or do we want something else.
+            setDrivingPower(-gamepad1.left_stick_y,-gamepad1.right_stick_y);
+            telemetry.addData("FL pos", frontLeft.getCurrentPosition());
+            telemetry.addData("BL pos", backLeft.getCurrentPosition());
+            telemetry.addData("FR pos", frontRight.getCurrentPosition());
+            telemetry.addData("BR pos", backRight.getCurrentPosition());
+            telemetry.update();
 
             if (gamepad1.a){
                 moveArmToOtherSide();
