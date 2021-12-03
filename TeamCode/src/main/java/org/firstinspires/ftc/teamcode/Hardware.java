@@ -88,7 +88,7 @@ public class Hardware extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
-        clawStrafe.setDirection(DcMotor.Direction.FORWARD);
+        clawStrafe.setDirection(DcMotor.Direction.REVERSE);
         clawRotate.setDirection(DcMotor.Direction.FORWARD);
         carousel.setDirection(DcMotor.Direction.FORWARD);
 
