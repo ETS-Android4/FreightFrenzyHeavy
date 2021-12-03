@@ -10,9 +10,7 @@ public class Auto extends Hardware {
     public boolean isBlueAlliance = true;
     public int delaySeconds = 0; //seconds to wait for alliance
     public String startingPosition = "Carousel";
-    public int duckStartLocation = 1; //ilegal
-    public int drivers = 1; //number of drivers on team
-    //public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
+
     @Override
     public void runOpMode(){
         //Mirror driving wheels and flip carousel direction only if we are the red alliance
@@ -56,16 +54,17 @@ public class Auto extends Hardware {
                 case "Delay":
                     if (gamepad1.dpad_up) {
                         delaySeconds++;
-                    }
-                    if (gamepad1.dpad_down) {
+                    } else if (gamepad1.dpad_down) {
                         delaySeconds--;
                     }
                     delaySeconds = Range.clip(delaySeconds, 0, 30);
                     telemetry.addLine("delaySeconds = " + delaySeconds);
+
                     if (gamepad1.x) { // pressing 'x' sends selector to the next variable
                         currentParameter = "Starting Position";
                     }
-                    break;
+                break;
+
                 case "Starting Position":
                     //Choose between "Carousel" and "Warehouse"
                     if (gamepad1.dpad_up) {
@@ -74,11 +73,13 @@ public class Auto extends Hardware {
                         startingPosition = "Warehouse";
                     }
                     telemetry.addLine("startingPosition = " + startingPosition);
+
                     if(gamepad1.x) {
                         currentParameter = "Delay";
                     }
-                    break;
+                break;
             }
+
             //Output to telemetry and sleep
             telemetry.update();
             sleep(200);
