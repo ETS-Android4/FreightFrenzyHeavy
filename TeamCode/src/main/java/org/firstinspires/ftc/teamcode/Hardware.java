@@ -123,6 +123,17 @@ public class Hardware extends LinearOpMode {
         Claw claw = new Claw(clawGrabL, clawGrabR);
     }
 
+    public void encoderToSpecificPos(DcMotor motor, int pos , double power){
+        motor.setTargetPosition(pos);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(power);
+        while (motor.isBusy() && opModeIsActive()){
+            idle();
+        }
+        motor.setPower(0);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     public void moveArmToOtherSide(){
         if (armLocation == 0){
             singleMotorEncoderDrive(clawStrafe,0.5,ARM_MOVE_REVOLUTIONS,10);
@@ -132,6 +143,7 @@ public class Hardware extends LinearOpMode {
             armLocation = 0;
         }
     }
+
 
     // TODO: Arm functions redo.
     public void fullRotateArm(){

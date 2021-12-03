@@ -19,24 +19,52 @@ public class TeleOp extends Hardware{
         telemetry.addData("Status","Match in Progress");
         telemetry.update();
         // I'm doing random controls for now. Adjust as needed. Just want to have this basically written.
+
+        boolean firstStrafe = true; //used to make sure that encoder doesn't get confused about its location
+
         while (opModeIsActive()){
             // Tank drive? Or do we want something else.
             setDrivingPower(-gamepad1.left_stick_y,-gamepad1.right_stick_y);
-            telemetry.addData("FL pos", frontLeft.getCurrentPosition());
-            telemetry.addData("BL pos", backLeft.getCurrentPosition());
-            telemetry.addData("FR pos", frontRight.getCurrentPosition());
-            telemetry.addData("BR pos", backRight.getCurrentPosition());
+
+
+            //auto-strafe -- not working yet
+            if(gamepad1.a && !firstStrafe){
+                encoderToSpecificPos(clawStrafe,0,0.5);
+            }
+            else if(gamepad1.b){
+                encoderToSpecificPos(clawStrafe,4900,0.5);
+                firstStrafe = false;
+            }
+
+            //manual strafe
+            if(gamepad1.dpad_up){
+                clawStrafe.setPower(.5);
+            }
+            else if(gamepad1.dpad_down) {
+                clawStrafe.setPower(-.5);
+            }
+            else{
+                clawStrafe.setPower(0);
+            }
+
+            //claw rotate
+            if(gamepad1.right_bumper){
+                clawRotate.setPower(.125);
+            }
+            else if (gamepad1.left_bumper) {
+                clawRotate.setPower(-.125);
+            }
+            else{
+                clawRotate.setPower(0);
+            }
+
+            telemetry.addData("clawRotate:",clawRotate.getCurrentPosition()); // not working
+            telemetry.addData("clawStrafe", clawStrafe.getCurrentPosition());
             telemetry.update();
 
-            if (gamepad1.a){
-                moveArmToOtherSide();
-            }
-            if (gamepad1.b){
-                deliverDuck();
-            }
-            if (gamepad1.x){
-                fullRotateArm();
-            }
+
+
+
 
 
         }
