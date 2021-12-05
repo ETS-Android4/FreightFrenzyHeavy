@@ -34,7 +34,7 @@ public class TeleOp extends Hardware{
 //            }
 
             //grab
-            if (gamepad1.y) {
+            if (gamepad2.y) {
                 if (clawOpen) {
                     claw.setPosition(0.1);
                     clawOpen = false;
@@ -54,10 +54,10 @@ public class TeleOp extends Hardware{
             }
 
             //manual strafe
-            if(gamepad1.dpad_up){
+            if(gamepad2.dpad_up){
                 clawStrafe.setPower(.5);
             }
-            else if(gamepad1.dpad_down) {
+            else if(gamepad2.dpad_down) {
                 clawStrafe.setPower(-.5);
             }
             else{
@@ -65,10 +65,10 @@ public class TeleOp extends Hardware{
             }
 
             //claw rotate
-            if(gamepad1.right_bumper){
+            if(gamepad2.right_bumper){
                 clawRotate.setPower(.25);
             }
-            else if (gamepad1.left_bumper) {
+            else if (gamepad2.left_bumper) {
                 clawRotate.setPower(-.25);
             }
             else{
