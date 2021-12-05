@@ -17,6 +17,9 @@ public class Claw {
         this.leftFinger.setPosition(endPosition);
         this.rightFinger.setPosition(endPosition);
     }
+    public double getPosition(){
+        return leftFinger.getPosition();
+    }
 
     public void grabCube() {
         this.setPosition(0.05);

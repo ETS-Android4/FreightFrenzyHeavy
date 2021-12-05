@@ -120,13 +120,15 @@ public class Hardware extends LinearOpMode {
         telemetry.addData("Status:", "Setup Complete");
         telemetry.update();
 
-        Claw claw = new Claw(clawGrabL, clawGrabR);
+        claw = new Claw(clawGrabL, clawGrabR);
     }
 
     public void encoderToSpecificPos(DcMotor motor, int pos , double power){
         motor.setTargetPosition(pos);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
+        telemetry.addData("strafe", motor.getCurrentPosition());
+        telemetry.update();
         while (motor.isBusy() && opModeIsActive()){
             idle();
         }
