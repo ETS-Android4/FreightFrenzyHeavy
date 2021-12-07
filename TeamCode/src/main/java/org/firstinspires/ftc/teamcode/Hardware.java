@@ -18,7 +18,7 @@ public class Hardware extends LinearOpMode {
     int armLocation = 0;
     int armRotation = 0;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 420 ;    // Needs to be fixed based on the motors
+    static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // Needs to be fixed based on the motors
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference. Not sure what it is
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /

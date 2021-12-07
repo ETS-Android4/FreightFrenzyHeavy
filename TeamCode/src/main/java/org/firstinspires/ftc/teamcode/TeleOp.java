@@ -19,6 +19,9 @@ public class TeleOp extends Hardware{
         // I'm doing random controls for now. Adjust as needed. Just want to have this basically written.
 //        boolean firstStrafe = true; //used to make sure that encoder doesn't get confused about its location
         boolean clawOpen = true; //used to make sure that code doesn't get confused about whether claw is open or not
+        int pos;
+        int direction = 0;
+
         while (opModeIsActive()){
 
             // Tank drive? Or do we want something else.
@@ -31,6 +34,17 @@ public class TeleOp extends Hardware{
 //            else if(gamepad1.b){
 //                encoderToSpecificPos(clawStrafe,2200,0.5); //4500 is final location, any other values are for testing
 //                firstStrafe = false;
+//            }
+//            auto-strafe: take two
+//            if(gamepad2.b){
+//                direction = 1;
+//                pos = 4900;
+//            } else if(gamepad2.a){
+//                direction = -1;
+//                pos = 0;
+//            }
+//            if((direction == 1 && clawStrafe.getCurrentPosition() <= pos) || direction == -1 && clawStrafe.getCurrentPosition() >= pos){
+//                clawStrafe.setPower(.5 * direction);
 //            }
 
             //grab
@@ -48,7 +62,9 @@ public class TeleOp extends Hardware{
 
             //carousel
             if (gamepad1.x) {
-                carousel.setPower(0.7);
+                carousel.setPower(1);
+            } else if (gamepad1.y) {
+                carousel.setPower(-1);
             } else {
                 carousel.setPower(0);
             }
