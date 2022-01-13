@@ -12,8 +12,8 @@ public class Hardware extends LinearOpMode {
     // Good Luck!
     //You should put constants here
 
-    protected DcMotor frontLeft, frontRight, backLeft, backRight, clawStrafe, clawRotate, carousel ;
-    protected Servo clawGrabL, clawGrabR;
+    protected DcMotor frontLeft, frontRight, backLeft, backRight, carousel;//clawStrafe, clawRotate, carousel ;
+    //protected Servo clawGrabL, clawGrabR;
     Claw claw;
     int armLocation = 0;
     int armRotation = 0;
@@ -76,37 +76,37 @@ public class Hardware extends LinearOpMode {
         } else {
             carousel.setDirection(DcMotor.Direction.REVERSE);
         }
-
+        /*
         clawStrafe = hardwareMap.dcMotor.get("clawStrafe");
         clawRotate = hardwareMap.dcMotor.get("clawRotate");
-        carousel = hardwareMap.dcMotor.get("carousel");
         clawGrabL = hardwareMap.servo.get("clawL");
-        clawGrabR = hardwareMap.servo.get("clawR");
+        clawGrabR = hardwareMap.servo.get("clawR"); */
 
         //set motor directions
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
+        /*
         clawStrafe.setDirection(DcMotor.Direction.REVERSE);
         clawRotate.setDirection(DcMotor.Direction.FORWARD);
-        carousel.setDirection(DcMotor.Direction.FORWARD);
+        carousel.setDirection(DcMotor.Direction.FORWARD); */
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        clawStrafe.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        clawRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        clawStrafe.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        clawRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        clawStrafe.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        clawRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        clawStrafe.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        clawRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         //Use encoders to regulate speed
@@ -114,13 +114,13 @@ public class Hardware extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        clawStrafe.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        clawRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        clawStrafe.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        clawRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Status:", "Setup Complete");
         telemetry.update();
 
-        claw = new Claw(clawGrabL, clawGrabR);
+        //claw = new Claw(clawGrabL, clawGrabR);
     }
 
     public void encoderToSpecificPos(DcMotor motor, int pos , double power){
@@ -135,7 +135,7 @@ public class Hardware extends LinearOpMode {
         motor.setPower(0);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
+    /*
     public void moveArmToOtherSide(){
         if (armLocation == 0){
             singleMotorEncoderDrive(clawStrafe,0.5,ARM_MOVE_REVOLUTIONS,10);
@@ -144,9 +144,9 @@ public class Hardware extends LinearOpMode {
             singleMotorEncoderDrive(clawStrafe,0.5, - ARM_MOVE_REVOLUTIONS,10);
             armLocation = 0;
         }
-    }
+    }*/
 
-
+    /*
     // TODO: Arm functions redo.
     public void fullRotateArm(){
         // Will likely need acceleration control
@@ -158,7 +158,7 @@ public class Hardware extends LinearOpMode {
             singleMotorEncoderDrive(clawStrafe,0.5, - ARM_ROTATE_REVOLUTIONS,10);
             armRotation = 0;
         }
-    }
+    }*/
 
     public void clawOpen(){
         claw.setPosition(1);

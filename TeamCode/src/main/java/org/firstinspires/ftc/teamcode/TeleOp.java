@@ -68,7 +68,7 @@ public class TeleOp extends Hardware{
             } else {
                 carousel.setPower(0);
             }
-
+            /*
             //manual strafe
             if(gamepad2.dpad_up){
                 clawStrafe.setPower(.5);
@@ -92,7 +92,7 @@ public class TeleOp extends Hardware{
             }
 
             telemetry.addData("clawStrafe", clawStrafe.getCurrentPosition());
-            telemetry.addData("clawRotate", clawRotate.getCurrentPosition());
+            telemetry.addData("clawRotate", clawRotate.getCurrentPosition()); */
 //            telemetry.addData("clawFinger", claw.getPosition());
 
             telemetry.update();
