@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Hardware extends LinearOpMode {
@@ -12,10 +11,7 @@ public class Hardware extends LinearOpMode {
     // Good Luck!
     //You should put constants here
 
-    protected DcMotor frontLeft, frontRight, backLeft, backRight, carousel, grabber, lifter, dumper;
-    int armLocation = 0;
-    int armRotation = 0;
-
+    protected DcMotor frontLeft, frontRight, backLeft, backRight, carousel, ladder, intake, bucket;
     static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // Needs to be fixed based on the motors
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference. Not sure what it is
@@ -68,6 +64,7 @@ public class Hardware extends LinearOpMode {
 
         //Initialize and set direction of carousel motor
         carousel = hardwareMap.dcMotor.get("carousel");
+
         //TODO: flip the direction if it's going backwards
         if(isBlueAlliance) {
             carousel.setDirection(DcMotor.Direction.FORWARD);
@@ -75,9 +72,9 @@ public class Hardware extends LinearOpMode {
             carousel.setDirection(DcMotor.Direction.REVERSE);
         }
 
-        grabber = hardwareMap.dcMotor.get("grabber");
-        lifter = hardwareMap.dcMotor.get("lifter");
-        dumper = hardwareMap.dcMotor.get("dumper");
+        intake = hardwareMap.dcMotor.get("intake");
+        ladder = hardwareMap.dcMotor.get("ladder");
+        bucket = hardwareMap.dcMotor.get("bucket");
 
         //set motor directions
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -85,9 +82,9 @@ public class Hardware extends LinearOpMode {
         backRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         carousel.setDirection(DcMotor.Direction.FORWARD);
-        grabber.setDirection(DcMotorSimple.Direction.FORWARD);
-        lifter.setDirection(DcMotorSimple.Direction.FORWARD);
-        dumper.setDirection(DcMotorSimple.Direction.FORWARD);
+        bucket.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
+        ladder.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //set all motors to actively brake when assigned power is 0
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -95,26 +92,26 @@ public class Hardware extends LinearOpMode {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        grabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lifter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        dumper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ladder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        dumper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bucket.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ladder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Use encoders to regulate speed
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        dumper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bucket.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ladder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //update telemetry
         telemetry.addData("Status:", "Setup Complete");
@@ -184,6 +181,22 @@ public class Hardware extends LinearOpMode {
             //Clear Telemetry
             telemetry.update();
         }
+    }
+    public void makeVertical(double power){
+        int currentPos = intake.getCurrentPosition();
+        int goalPos = currentPos + (840 - (currentPos % 840));
+        telemetry.addData("current",intake.getCurrentPosition());
+        telemetry.addData("goal",goalPos);
+        telemetry.update();
+        sleep(2000);
+        intake.setTargetPosition(goalPos);
+        intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intake.setPower(power);
+        while(intake.isBusy()){
+            idle();
+        }
+        intake.setPower(0);
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public int encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
