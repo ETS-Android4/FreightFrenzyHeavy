@@ -80,7 +80,7 @@ public class Hardware extends LinearOpMode {
         carousel.setDirection(DcMotor.Direction.FORWARD);
         bucket.setDirection(DcMotorSimple.Direction.FORWARD);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        ladder.setDirection(DcMotorSimple.Direction.FORWARD);
+        ladder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //set all motors to actively brake when assigned power is 0
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -183,10 +183,12 @@ public class Hardware extends LinearOpMode {
 
     public void makeVertical(double power) {
         int currentPos = intake.getCurrentPosition();
-        int goalPos = currentPos + (840 - (currentPos % 840));
+        int ticksToMove = (int)( COUNTS_PER_MOTOR_REV/2 - (currentPos % (COUNTS_PER_MOTOR_REV/2)));
+        int goalPos = (currentPos + ticksToMove);
 
         telemetry.addData("current",intake.getCurrentPosition());
         telemetry.addData("goal",goalPos);
+        telemetry.addData("difference",ticksToMove);
         telemetry.update();
         intake.setTargetPosition(goalPos);
         intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -199,7 +201,7 @@ public class Hardware extends LinearOpMode {
         intake.setPower(0);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-    
+
     public int encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
 
 
