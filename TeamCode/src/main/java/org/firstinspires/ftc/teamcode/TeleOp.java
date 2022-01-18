@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp")
-public class TeleOp extends Hardware{
-    boolean getIsBlueAlliance() {return true;}
+public class TeleOp extends Hardware {
+    boolean getIsBlueAlliance() { return true; }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -25,21 +25,21 @@ public class TeleOp extends Hardware{
         int direction = 0;
         Button gamepad1x = new Button(false);
 
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
             gamepad1x.update(gamepad1.x);
-            if (gamepad1.x){
-                intake.setPower(0.6);
-            } else if(gamepad1x.isNewlyReleased()){
+            if (gamepad1.x) {
+                intake.setPower(-0.6);
+            } else if(gamepad1x.isNewlyReleased()) {
                 intake.setPower(0);
                  makeVertical(0.5);
-            } else if(!intake.isBusy()){
+            } else if(!intake.isBusy()) {
                 intake.setPower(0);
                 intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             // Tank drive? Or do we want something else.
             setDrivingPower(-gamepad1.left_stick_y,-gamepad1.right_stick_y);
-            if(gamepad1.a){
+            if (gamepad1.a) {
                 carousel.setPower(0.5);
             } else{
                 carousel.setPower(0);
@@ -54,28 +54,27 @@ public class TeleOp extends Hardware{
 //            }
             // Ladder up and down
 
-            if(gamepad1.dpad_up){
+            if (gamepad1.dpad_up) {
                 ladder.setPower(0.7);
-            } else if(gamepad1.dpad_down){
+            } else if (gamepad1.dpad_down) {
                 ladder.setPower(-0.4);
             } else{
                 ladder.setPower(0);
             }
 
-            if(gamepad1.left_bumper){
+            if (gamepad1.left_bumper) {
                 bucket.setPower(0.4);
-            } else if(gamepad1.right_bumper){
+            } else if (gamepad1.right_bumper) {
                 bucket.setPower(0.4);
-            } else{
+            } else {
                 bucket.setPower(0);
             }
+
             telemetry.addData("bucket", bucket.getCurrentPosition());
             telemetry.addData("intake", intake.getCurrentPosition());
             telemetry.addData("ladder", ladder.getCurrentPosition());
             telemetry.update();
 
         }
-
-
     }
 }

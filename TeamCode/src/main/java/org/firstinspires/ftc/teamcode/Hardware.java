@@ -65,12 +65,8 @@ public class Hardware extends LinearOpMode {
         //Initialize and set direction of carousel motor
         carousel = hardwareMap.dcMotor.get("carousel");
 
-        //TODO: flip the direction if it's going backwards
-        if(isBlueAlliance) {
-            carousel.setDirection(DcMotor.Direction.FORWARD);
-        } else {
-            carousel.setDirection(DcMotor.Direction.REVERSE);
-        }
+        // TODO: flip the direction if it's going backwards
+        carousel.setDirection(isBlueAlliance ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
 
         intake = hardwareMap.dcMotor.get("intake");
         ladder = hardwareMap.dcMotor.get("ladder");
@@ -124,9 +120,11 @@ public class Hardware extends LinearOpMode {
         motor.setPower(power);
         telemetry.addData("strafe", motor.getCurrentPosition());
         telemetry.update();
+
         while (motor.isBusy() && opModeIsActive()){
             idle();
         }
+
         motor.setPower(0);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
@@ -155,9 +153,9 @@ public class Hardware extends LinearOpMode {
         //singleMotorEncoderDrive(carousel, CAROUSEL_POWER, REVOLUTIONS_TO_TURN, 10);
     }
 
-    public void singleMotorEncoderDrive (DcMotor motor, double power, double revolutions, int timeoutS) {
+    public void singleMotorEncoderDrive(DcMotor motor, double power, double revolutions, int timeoutS) {
         double newMotorTarget;
-        if(opModeIsActive()) {
+        if (opModeIsActive()) {
             //calculate target positions
             newMotorTarget = motor.getCurrentPosition() + revolutions * COUNTS_PER_MOTOR_REV;
             //set target positions
@@ -182,37 +180,38 @@ public class Hardware extends LinearOpMode {
             telemetry.update();
         }
     }
-    public void makeVertical(double power){
+
+    public void makeVertical(double power) {
         int currentPos = intake.getCurrentPosition();
         int goalPos = currentPos + (840 - (currentPos % 840));
+
         telemetry.addData("current",intake.getCurrentPosition());
         telemetry.addData("goal",goalPos);
         telemetry.update();
-        sleep(2000);
         intake.setTargetPosition(goalPos);
         intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         intake.setPower(power);
-        while(intake.isBusy()){
+
+        while (intake.isBusy()) {
             idle();
         }
+
         intake.setPower(0);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
+    
     public int encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
-        // stop and reset the encoders? Maybe not. Might want to get position and add from there
-        double newFRTarget;
-        double newFLTarget;
-        double newBLTarget;
-        double newBRTarget;
 
-        if (opModeIsActive()){
+
+        if (opModeIsActive()) {
 
             //calculate and set target positions
-            newFRTarget = frontRight.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
-            newFLTarget = frontLeft.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
-            newBLTarget = backLeft.getCurrentPosition()     +  (backLeftInches * COUNTS_PER_INCH);
-            newBRTarget = backRight.getCurrentPosition()     + (backRightInches * COUNTS_PER_INCH);
+            // stop and reset the encoders? Maybe not. Might want to get position and add from there
+
+            double newFRTarget = frontRight.getCurrentPosition() + (frontRightInches * COUNTS_PER_INCH);
+            double newFLTarget = frontLeft.getCurrentPosition() + (frontLeftInches * COUNTS_PER_INCH);
+            double newBLTarget = backLeft.getCurrentPosition() + (backLeftInches * COUNTS_PER_INCH);
+            double newBRTarget = backRight.getCurrentPosition() + (backRightInches * COUNTS_PER_INCH);
 
             backRight.setTargetPosition((int) newBRTarget);
             frontRight.setTargetPosition((int) newFRTarget);
