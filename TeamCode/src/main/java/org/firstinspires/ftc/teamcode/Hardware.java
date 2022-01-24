@@ -188,7 +188,7 @@ public class Hardware extends LinearOpMode {
 
         telemetry.addData("current",intake.getCurrentPosition());
         telemetry.addData("goal",goalPos);
-        telemetry.addData("difference",ticksToMove);
+        telemetry.addData("difference","%d - %d", COUNTS_PER_MOTOR_REV/2, (currentPos % (COUNTS_PER_MOTOR_REV/2)));
         telemetry.update();
         intake.setTargetPosition(goalPos);
         intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);

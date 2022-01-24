@@ -24,14 +24,14 @@ public class TeleOp extends Hardware {
         int pos;
         int direction = 0;
         Button gamepad1x = new Button(false);
-
+        gamepad1x.update(gamepad1.x);
         while (opModeIsActive()) {
             gamepad1x.update(gamepad1.x);
             if (gamepad1.x) {
                 intake.setPower(-0.6);
             } else if(gamepad1x.isNewlyReleased()) {
                 intake.setPower(0);
-                 makeVertical(0.5);
+                makeVertical(0.5);
             } else if(!intake.isBusy()) {
                 intake.setPower(0);
                 intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -54,7 +54,7 @@ public class TeleOp extends Hardware {
 //            }
             // Ladder up and down
 
-            if (gamepad1.dpad_up) {
+            if (gamepad1.dpad_up && ladder.getCurrentPosition() < 8700) {
                 ladder.setPower(0.7);
             } else if (gamepad1.dpad_down) {
                 ladder.setPower(-0.4);
