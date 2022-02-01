@@ -31,7 +31,7 @@ public class TeleOp extends Hardware {
                 intake.setPower(-0.6);
             } else if(gamepad1x.isNewlyReleased()) {
                 intake.setPower(0);
-                makeVertical(0.5);
+//                makeVertical(0.5);
             } else if(!intake.isBusy()) {
                 intake.setPower(0);
                 intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -40,7 +40,7 @@ public class TeleOp extends Hardware {
             // Tank drive? Or do we want something else.
             setDrivingPower(-gamepad1.left_stick_y,-gamepad1.right_stick_y);
             if (gamepad1.a) {
-                carousel.setPower(0.5);
+                carousel.setPower(0.7);
             } else{
                 carousel.setPower(0);
             }
@@ -55,9 +55,9 @@ public class TeleOp extends Hardware {
             // Ladder up and down
 
             if (gamepad1.dpad_up && ladder.getCurrentPosition() < 8700) {
-                ladder.setPower(0.7);
+                ladder.setPower(1);
             } else if (gamepad1.dpad_down) {
-                ladder.setPower(-0.4);
+                ladder.setPower(-0.8);
             } else{
                 ladder.setPower(0);
             }
@@ -65,7 +65,7 @@ public class TeleOp extends Hardware {
             if (gamepad1.left_bumper) {
                 bucket.setPower(0.4);
             } else if (gamepad1.right_bumper) {
-                bucket.setPower(0.4);
+                bucket.setPower(-0.4);
             } else {
                 bucket.setPower(0);
             }
