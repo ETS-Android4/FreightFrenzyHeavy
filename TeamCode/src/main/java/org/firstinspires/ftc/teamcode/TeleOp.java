@@ -54,9 +54,9 @@ public class TeleOp extends Hardware {
 //            }
             // Ladder up and down
 
-            if (gamepad1.dpad_up && ladder.getCurrentPosition() < 8700) {
+            if (gamepad1.dpad_up && ladder.getCurrentPosition() < 8700 && !ceiling.isPressed()) {
                 ladder.setPower(1);
-            } else if (gamepad1.dpad_down) {
+            } else if (gamepad1.dpad_down && !floor.isPressed()) {
                 ladder.setPower(-0.8);
             } else{
                 ladder.setPower(0);
@@ -73,6 +73,8 @@ public class TeleOp extends Hardware {
             telemetry.addData("bucket", bucket.getCurrentPosition());
             telemetry.addData("intake", intake.getCurrentPosition());
             telemetry.addData("ladder", ladder.getCurrentPosition());
+            telemetry.addData("ceiling sensor", ceiling.getValue());
+            telemetry.addData("floor sensor", floor.getValue());
             telemetry.update();
 
         }

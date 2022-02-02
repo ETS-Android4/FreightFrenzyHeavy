@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -18,6 +19,7 @@ public class Hardware extends LinearOpMode {
     //You should put constants here
 
     protected DcMotor frontLeft, frontRight, backLeft, backRight, carousel, ladder, intake, bucket;
+    protected TouchSensor ceiling, floor;
     static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // Needs to be fixed based on the motors
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference. Not sure what it is
@@ -85,6 +87,8 @@ public class Hardware extends LinearOpMode {
         intake = hardwareMap.dcMotor.get("intake");
         ladder = hardwareMap.dcMotor.get("ladder");
         bucket = hardwareMap.dcMotor.get("bucket");
+        ceiling = hardwareMap.touchSensor.get("ceiling");
+        floor = hardwareMap.touchSensor.get("floor");
 
         //set motor directions
 //        frontLeft.setDirection(DcMotor.Direction.REVERSE);
