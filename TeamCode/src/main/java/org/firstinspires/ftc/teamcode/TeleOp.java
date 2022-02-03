@@ -24,14 +24,16 @@ public class TeleOp extends Hardware {
         int pos;
         int direction = 0;
         Button gamepad1x = new Button(false);
+        Button gamepad1b = new Button(false);
         gamepad1x.update(gamepad1.x);
         while (opModeIsActive()) {
             gamepad1x.update(gamepad1.x);
-            if (gamepad1.x) {
+            gamepad1b.update(gamepad1.b);
+            if (gamepad1.x && floor.isPressed()) {
                 intake.setPower(-0.6);
-            } else if(gamepad1x.isNewlyReleased()) {
+            } else if(gamepad1x.isNewlyReleased() && floor.isPressed()) {
                 intake.setPower(0);
-//                makeVertical(0.5);
+                makeVertical(0.8);
             } else if(!intake.isBusy()) {
                 intake.setPower(0);
                 intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -53,21 +55,25 @@ public class TeleOp extends Hardware {
 //                intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //            }
             // Ladder up and down
-
-            if (gamepad1.dpad_up && ladder.getCurrentPosition() < 8700 && !ceiling.isPressed()) {
+            if (gamepad1.dpad_up && ladder.getCurrentPosition() < 8700 && !ceiling.isPressed() && !intake.isBusy() && bucket.getCurrentPosition() < 50) {
                 ladder.setPower(1);
-            } else if (gamepad1.dpad_down && !floor.isPressed()) {
+            } else if (gamepad1.dpad_down && !floor.isPressed() && !intake.isBusy() && bucket.getCurrentPosition() < 50) {
                 ladder.setPower(-0.8);
             } else{
                 ladder.setPower(0);
             }
 
-            if (gamepad1.left_bumper) {
+            // Bucket
+            if (gamepad1.left_bumper && ladder.getCurrentPosition() > 4000 && bucket.getCurrentPosition() < 450) {
                 bucket.setPower(0.4);
-            } else if (gamepad1.right_bumper) {
+            } else if (gamepad1.right_bumper && bucket.getCurrentPosition() > 0) {
                 bucket.setPower(-0.4);
             } else {
                 bucket.setPower(0);
+            }
+            // Auto back for the bucket
+            if(gamepad1b.isNewlyPressed() &&  ladder.getCurrentPosition() > 5000){
+                encoderToSpecificPos(bucket,0,0.7);
             }
 
             telemetry.addData("bucket", bucket.getCurrentPosition());

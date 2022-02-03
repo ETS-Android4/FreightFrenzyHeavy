@@ -361,13 +361,13 @@ public class Hardware extends LinearOpMode {
 
     public void makeVertical(double power) {
         int currentPos = intake.getCurrentPosition();
-        int ticksToMove = (int)( COUNTS_PER_MOTOR_REV/2 - (currentPos % (COUNTS_PER_MOTOR_REV/2)));
+        int ticksToMove = (int)(840 - (currentPos % (840)));
         int goalPos = (currentPos + ticksToMove);
 
-        telemetry.addData("current",intake.getCurrentPosition());
-        telemetry.addData("goal",goalPos);
-        telemetry.addData("difference","%d - %d", COUNTS_PER_MOTOR_REV/2, (currentPos % (COUNTS_PER_MOTOR_REV/2)));
-        telemetry.update();
+//        telemetry.addData("current",intake.getCurrentPosition());
+//        telemetry.addData("goal",goalPos);
+//        telemetry.addData("difference","%d - %d", COUNTS_PER_MOTOR_REV/2, (currentPos % (COUNTS_PER_MOTOR_REV/2)));
+//        telemetry.update();
         intake.setTargetPosition(goalPos);
         intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         intake.setPower(power);
