@@ -379,6 +379,28 @@ public class Hardware extends LinearOpMode {
         intake.setPower(0);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+    public void makeHorizontal(double power) {
+        int currentPos = intake.getCurrentPosition();
+        int ticksToMove = (int)(840 - (currentPos % (840)) + 420);
+        int goalPos = (currentPos + ticksToMove);
+
+//        telemetry.addData("current",intake.getCurrentPosition());
+//        telemetry.addData("goal",goalPos);
+//        telemetry.addData("difference","%d - %d", COUNTS_PER_MOTOR_REV/2, (currentPos % (COUNTS_PER_MOTOR_REV/2)));
+//        telemetry.update();
+        intake.setTargetPosition(goalPos);
+        intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intake.setPower(power);
+
+        while (intake.isBusy()) {
+            idle();
+        }
+
+        intake.setPower(0);
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+
 
     public void encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
         // stop and reset the encoders? Maybe not. Might want to get position and add from there
