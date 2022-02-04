@@ -7,6 +7,7 @@ Must return to vertical position when user releases button
 BUCKET
 
 Can only rotate when ladder is above a certain height
+(test this more: when below that height, run to position)
 
 
 LADDER
