@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -11,7 +13,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 // Just a start with the camera.
 
-
+@Autonomous(name="Blue Carousel")
 public class AutoCarouselBlue extends Hardware{
     OpenCvInternalCamera phoneCam;
     OpenCvWebcam webcam;
@@ -46,7 +48,7 @@ public class AutoCarouselBlue extends Hardware{
             }
         });
 
-        hardwareSetup(false,true);
+        hardwareSetup();
         imuSetup();
         while (!isStarted() && !isStopRequested())
         {

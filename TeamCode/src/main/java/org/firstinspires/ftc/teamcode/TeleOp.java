@@ -2,16 +2,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Blue TeleOp")
 public class TeleOp extends Hardware {
     boolean getIsBlueAlliance() { return true; }
 
     @Override
     public void runOpMode() throws InterruptedException {
+        boolean lowering = false;
 
         telemetry.addData("Status","Intializing");
         telemetry.update();
-        hardwareSetup(false, getIsBlueAlliance());
+        hardwareSetup();
         telemetry.addData("Status","Waiting for Start");
         telemetry.update();
         //Wait until the play button is pressed
@@ -27,6 +28,8 @@ public class TeleOp extends Hardware {
         Button gamepad2b = new Button(false);
         Button gamepad2y = new Button(false);
         gamepad2x.update(gamepad2.x);
+        gamepad2b.update(gamepad2.b);
+        gamepad2y.update(gamepad2.y);
         while (opModeIsActive()) {
             gamepad2x.update(gamepad2.x);
             gamepad2b.update(gamepad2.b);
@@ -34,13 +37,12 @@ public class TeleOp extends Hardware {
 
             if (gamepad2.x && floor.isPressed()) {
                 intake.setPower(-0.6);
-            } else if(gamepad2x.isNewlyReleased() && floor.isPressed()) {
+            } else if(gamepad2x.isNewlyReleased() && intake.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
                 intake.setPower(0);
                 makeVertical(0.8);
-            } else if(!intake.isBusy()) {
-                intake.setPower(0);
-                intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
+
+            updateMotor(intake);
 
 //            if (gamepad2.y && (floor.isPressed() || ladder.getCurrentPosition() > 4000)) {
 //                intake.setPower(0.6);
@@ -54,9 +56,11 @@ public class TeleOp extends Hardware {
 
 
             // Tank drive? Or do we want something else.
-            setDrivingPower(-gamepad1.left_stick_y,-gamepad1.right_stick_y);
+            setDrivingPowers(-gamepad1.left_stick_y,-gamepad1.right_stick_y);
+
+            //carousel
             if (gamepad2.a) {
-                carousel.setPower(0.7);
+                carousel.setPower(1);
             } else{
                 carousel.setPower(0);
             }
@@ -73,7 +77,11 @@ public class TeleOp extends Hardware {
                 ladder.setPower(1);
             } else if (gamepad2.dpad_down && !floor.isPressed() && !intake.isBusy() && bucket.getCurrentPosition() < 50) {
                 ladder.setPower(-0.8);
-            } else{
+            } else if (!lowering || ladder.getCurrentPosition() < 1500){
+                if(lowering) {
+                    makeHorizontal(0.5);
+                    lowering = false;
+                }
                 ladder.setPower(0);
             }
 
@@ -83,10 +91,6 @@ public class TeleOp extends Hardware {
                     bucket.setPower(0.4);
                 } else if (gamepad2.right_bumper && ladder.getCurrentPosition() > 4000 && bucket.getCurrentPosition() > 0) {
                     bucket.setPower(-0.4);
-                } else if (ladder.getCurrentPosition() <= 4000) {
-                    bucket.setTargetPosition(-3);
-                    bucket.setPower(0.7);
-                    bucket.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 } else {
                     bucket.setPower(0);
                 }
@@ -98,12 +102,11 @@ public class TeleOp extends Hardware {
             // Auto back for the bucket
             if(gamepad2b.isNewlyPressed()){
                 encoderToSpecificPos(bucket,-3,0.7);
-                while(ladder.getCurrentPosition() > 1500){
-                    ladder.setPower(1);
-                }
-                makeHorizontal(.5);
-
+                lowering = true;
+                ladder.setPower(-1);
             }
+
+            updateMotor(bucket);
 
             telemetry.addData("bucket", bucket.getCurrentPosition());
             telemetry.addData("intake", intake.getCurrentPosition());
