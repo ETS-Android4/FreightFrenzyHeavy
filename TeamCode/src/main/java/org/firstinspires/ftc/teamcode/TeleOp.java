@@ -63,14 +63,24 @@ public class TeleOp extends Hardware {
                 ladder.setPower(0);
             }
 
-            // Bucket
-            if (gamepad1.left_bumper && ladder.getCurrentPosition() > 4000 && bucket.getCurrentPosition() < 450) {
-                bucket.setPower(0.4);
-            } else if (gamepad1.right_bumper && bucket.getCurrentPosition() > 0) {
-                bucket.setPower(-0.4);
-            } else {
+            // Bucket TODO: test the run to position thingy
+            if(bucket.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+                if (gamepad1.left_bumper && ladder.getCurrentPosition() > 4000 && bucket.getCurrentPosition() < 450) {
+                    bucket.setPower(0.4);
+                } else if (gamepad1.right_bumper && ladder.getCurrentPosition() > 4000 && bucket.getCurrentPosition() > 0) {
+                    bucket.setPower(-0.4);
+                } else if (ladder.getCurrentPosition() <= 4000) {
+                    bucket.setTargetPosition(0);
+                    bucket.setPower(0.7);
+                    bucket.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                } else {
+                    bucket.setPower(0);
+                }
+            } else if (!ladder.isBusy()) {
                 bucket.setPower(0);
+                bucket.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
+
             // Auto back for the bucket
             if(gamepad1b.isNewlyPressed() &&  ladder.getCurrentPosition() > 5000){
                 encoderToSpecificPos(bucket,0,0.7);
