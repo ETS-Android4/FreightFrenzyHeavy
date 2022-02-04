@@ -23,15 +23,18 @@ public class TeleOp extends Hardware {
         boolean clawOpen = true; //used to make sure that code doesn't get confused about whether claw is open or not
         int pos;
         int direction = 0;
-        Button gamepad1x = new Button(false);
-        Button gamepad1b = new Button(false);
-        gamepad1x.update(gamepad1.x);
+        Button gamepad2x = new Button(false);
+        Button gamepad2b = new Button(false);
+        Button gamepad2y = new Button(false);
+        gamepad2x.update(gamepad2.x);
         while (opModeIsActive()) {
-            gamepad1x.update(gamepad1.x);
-            gamepad1b.update(gamepad1.b);
-            if (gamepad1.x && floor.isPressed()) {
+            gamepad2x.update(gamepad2.x);
+            gamepad2b.update(gamepad2.b);
+            gamepad2y.update(gamepad2.y);
+
+            if (gamepad2.x && floor.isPressed()) {
                 intake.setPower(-0.6);
-            } else if(gamepad1x.isNewlyReleased() && floor.isPressed()) {
+            } else if(gamepad2x.isNewlyReleased() && floor.isPressed()) {
                 intake.setPower(0);
                 makeVertical(0.8);
             } else if(!intake.isBusy()) {
@@ -39,41 +42,57 @@ public class TeleOp extends Hardware {
                 intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
+//            if (gamepad2.y && (floor.isPressed() || ladder.getCurrentPosition() > 4000)) {
+//                intake.setPower(0.6);
+//            } else if(gamepad2y.isNewlyReleased() && (floor.isPressed() || ladder.getCurrentPosition() > 4000)) {
+//                intake.setPower(0);
+//                makeVertical(-0.8);
+//            } else if(!intake.isBusy()) {
+//                intake.setPower(0);
+//                intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            }
+
+
             // Tank drive? Or do we want something else.
             setDrivingPower(-gamepad1.left_stick_y,-gamepad1.right_stick_y);
-            if (gamepad1.a) {
+            if (gamepad2.a) {
                 carousel.setPower(0.7);
             } else{
                 carousel.setPower(0);
             }
-            //Spinngin intake
+            //Spinning intake
 
-//            if(gamepad1.x){
+//            if(gamepad2.x){
 //            } else if(!intake.isBusy())
 //            {
 //                intake.setPower(0);
 //                intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //            }
             // Ladder up and down
-            if (gamepad1.dpad_up && ladder.getCurrentPosition() < 8700 && !ceiling.isPressed() && !intake.isBusy() && bucket.getCurrentPosition() < 50) {
+            if (gamepad2.dpad_up && !ceiling.isPressed() && !intake.isBusy() && bucket.getCurrentPosition() < 50) {
                 ladder.setPower(1);
-            } else if (gamepad1.dpad_down && !floor.isPressed() && !intake.isBusy() && bucket.getCurrentPosition() < 50) {
+            } else if (gamepad2.dpad_down && !floor.isPressed() && !intake.isBusy() && bucket.getCurrentPosition() < 50) {
                 ladder.setPower(-0.8);
             } else{
                 ladder.setPower(0);
             }
 
             // Bucket
-            if (gamepad1.left_bumper && ladder.getCurrentPosition() > 4000 && bucket.getCurrentPosition() < 450) {
+            if (gamepad2.left_bumper && bucket.getCurrentPosition() < 450) {
                 bucket.setPower(0.4);
-            } else if (gamepad1.right_bumper && bucket.getCurrentPosition() > 0) {
+            } else if (gamepad2.right_bumper && bucket.getCurrentPosition() > 0) {
                 bucket.setPower(-0.4);
             } else {
                 bucket.setPower(0);
             }
             // Auto back for the bucket
-            if(gamepad1b.isNewlyPressed() &&  ladder.getCurrentPosition() > 5000){
-                encoderToSpecificPos(bucket,0,0.7);
+            if(gamepad2b.isNewlyPressed()){
+                encoderToSpecificPos(bucket,-3,0.7);
+                while(ladder.getCurrentPosition() > 1500){
+                    ladder.setPower(1);
+                }
+                makeHorizontal(.5);
+
             }
 
             telemetry.addData("bucket", bucket.getCurrentPosition());
