@@ -41,7 +41,6 @@ public class Hardware extends LinearOpMode {
 
     public ElapsedTime runtime = new ElapsedTime();
 
-    PIDController pidRotate;
     private BNO055IMU imu;
     double globalAngle, rotation;
     Orientation lastAngles = new Orientation();
@@ -136,7 +135,6 @@ public class Hardware extends LinearOpMode {
         imu.initialize(parameters);
 
         // Create a pid controller with some guess values
-        pidRotate = new PIDController(.01, 0, 0);
 
         telemetry.addData("Status","Calibrating Gyro");
         telemetry.update();
@@ -156,17 +154,19 @@ public class Hardware extends LinearOpMode {
 
     //TODO: test to see if this works
     public void rotateToPos(double degrees, double maxPower) {
-        pidRotate.reset();
+        PIDController pidRotate = new PIDController(.004, .00002, 0);
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, 180);
         pidRotate.setOutputRange(0, maxPower);
         pidRotate.setTolerance(0.5);
-        //pidRotate.setContinuous();
         pidRotate.enable();
         pidRotate.performPID();
         while(opModeIsActive() && !pidRotate.onTarget()) {
             double power = pidRotate.performPID(getHeading());
             setDrivingPowers(-power, power);
+            telemetry.addData("Status","Rotating to " + degrees);
+            telemetry.addData("Currently at",getHeading());
+            telemetry.update();
         }
     }
 
@@ -241,12 +241,12 @@ public class Hardware extends LinearOpMode {
     //This starts the process. In a loop, call updateIntake() each cycle.
     public void makeVertical(double power) {
         int currentPos = intake.getCurrentPosition();
-        int ticksToMove = (int)(840 - (currentPos % (840)));
-        int goalPos = (currentPos + ticksToMove);
+        int rotations = currentPos / 840; //this is integer division, not exact division
+        int goalPos = (840 * (rotations - 1));
 
 //        telemetry.addData("current",intake.getCurrentPosition());
 //        telemetry.addData("goal",goalPos);
-//        telemetry.addData("difference","%d - %d", COUNTS_PER_MOTOR_REV/2, (currentPos % (COUNTS_PER_MOTOR_REV/2)));
+//        telemetry.addData("rotations", rotations );
 //        telemetry.update();
         intake.setTargetPosition(goalPos);
         intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -257,6 +257,9 @@ public class Hardware extends LinearOpMode {
     public void makeHorizontal(double power) {
         int currentPos = intake.getCurrentPosition();
         int ticksToMove = (int)(840 - (currentPos % (840)) + 420);
+        if(ticksToMove < 0) {
+            ticksToMove += 840;
+        }
         int goalPos = (currentPos + ticksToMove);
 
 //        telemetry.addData("current",intake.getCurrentPosition());
