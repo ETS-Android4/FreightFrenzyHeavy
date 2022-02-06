@@ -73,9 +73,9 @@ public class TeleOp extends Hardware {
 //                intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //            }
             // Ladder up and down
-            if (gamepad2.dpad_up && !ceiling.isPressed() && !intake.isBusy() && bucket.getCurrentPosition() < 50) {
+            if (gamepad2.dpad_up && !ceiling.isPressed() && !intake.isBusy()) {
                 ladder.setPower(1);
-            } else if (gamepad2.dpad_down && !floor.isPressed() && !intake.isBusy() && bucket.getCurrentPosition() < 50) {
+            } else if (gamepad2.dpad_down && !floor.isPressed() && !intake.isBusy()) {
                 ladder.setPower(-0.8);
             } else if (!lowering || ladder.getCurrentPosition() < 1800) {
                 if(lowering) {
@@ -87,9 +87,9 @@ public class TeleOp extends Hardware {
 
             // Bucket TODO: test the run to position thingy and get rid of magic numbers
             if(bucket.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-                if (gamepad2.left_bumper && ladder.getCurrentPosition() > 4000 && bucket.getCurrentPosition() < 450) {
+                if (gamepad2.left_bumper) {
                     bucket.setPower(0.4);
-                } else if (gamepad2.right_bumper && ladder.getCurrentPosition() > 4000 && bucket.getCurrentPosition() > 0) {
+                } else if (gamepad2.right_bumper) {
                     bucket.setPower(-0.4);
                 } else {
                     bucket.setPower(0);
