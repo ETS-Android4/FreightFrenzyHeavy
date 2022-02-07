@@ -239,10 +239,30 @@ public class Hardware extends LinearOpMode {
     }
 
     //This starts the process. In a loop, call updateIntake() each cycle.
-    public void makeVertical(double power) {
+    public void makeVerticalInwards(double power) {
         int currentPos = intake.getCurrentPosition();
         int rotations = currentPos / 840; //this is integer division, not exact division
-        int goalPos = (840 * (rotations - 1));
+        if (currentPos < 0) {
+            rotations -= 1;
+        }
+        int goalPos = 840 * rotations;
+
+//        telemetry.addData("current",intake.getCurrentPosition());
+//        telemetry.addData("goal",goalPos);
+//        telemetry.addData("rotations", rotations );
+//        telemetry.update();
+        intake.setTargetPosition(goalPos);
+        intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intake.setPower(power);
+    }
+
+    public void makeVerticalOutwards(double power) {
+        int currentPos = intake.getCurrentPosition();
+        int rotations = currentPos / 840; //this is integer division, not exact division
+        if (currentPos < 0) {
+            rotations -= 1;
+        }
+        int goalPos = 840 * (rotations + 2);
 
 //        telemetry.addData("current",intake.getCurrentPosition());
 //        telemetry.addData("goal",goalPos);

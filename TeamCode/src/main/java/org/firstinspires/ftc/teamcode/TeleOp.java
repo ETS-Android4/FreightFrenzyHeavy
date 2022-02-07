@@ -27,19 +27,39 @@ public class TeleOp extends Hardware {
         Button gamepad2x = new Button(false);
         Button gamepad2b = new Button(false);
         Button gamepad2y = new Button(false);
+        Button gamepad2LeftTrigger = new Button(false);
+        Button gamepad2RightTrigger = new Button(false);
+//        gamepad2.left
         gamepad2x.update(gamepad2.x);
         gamepad2b.update(gamepad2.b);
         gamepad2y.update(gamepad2.y);
+        gamepad2LeftTrigger.update(gamepad2.left_trigger > 0);
+        gamepad2RightTrigger.update(gamepad2.right_trigger > 0);
         while (opModeIsActive()) {
             gamepad2x.update(gamepad2.x);
             gamepad2b.update(gamepad2.b);
             gamepad2y.update(gamepad2.y);
+            gamepad2LeftTrigger.update(gamepad2.left_trigger > 0);
+            gamepad2RightTrigger.update(gamepad2.right_trigger > 0);
 
-            if (gamepad2.x && floor.isPressed()) {
-                intake.setPower(-0.6);
-            } else if(gamepad2x.isNewlyReleased() && intake.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-                intake.setPower(0);
-                makeVertical(0.8);
+            if (true) { // originally set to floor.isPressed() || ceiling.isPressed()
+                if (gamepad2.x) {
+                    intake.setPower(-0.6);
+                } else if (gamepad2x.isNewlyReleased() && intake.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+                    makeVerticalInwards(0.8);
+                } else if (gamepad2.y) {
+                    intake.setPower(0.6);
+                } else if (gamepad2y.isNewlyReleased() && intake.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+                    makeVerticalOutwards(0.8);
+                } else if(gamepad2LeftTrigger.isCurrentlyPressed()){
+                    intake.setPower(0.6);
+                } else if(gamepad2LeftTrigger.isNewlyReleased()){
+                    intake.setPower(0);
+                } else if(gamepad2RightTrigger.isCurrentlyPressed()){
+                    intake.setPower(-0.6);
+                } else if(gamepad2RightTrigger.isNewlyReleased()){
+                    intake.setPower(0);
+                }
             }
 
             updateMotor(intake);
