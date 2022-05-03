@@ -42,27 +42,22 @@ public class TeleOp extends Hardware {
             gamepad2LeftTrigger.update(gamepad2.left_trigger > 0);
             gamepad2RightTrigger.update(gamepad2.right_trigger > 0);
 
-            if (true) { // originally set to floor.isPressed() || ceiling.isPressed()
                 if (gamepad2.x) {
-                    intake.setPower(-0.6);
-                } else if (gamepad2x.isNewlyReleased() && intake.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-                    makeVerticalInwards(0.8);
+                    setIntakePower(-.6);
                 } else if (gamepad2.y) {
-                    intake.setPower(0.6);
-                } else if (gamepad2y.isNewlyReleased() && intake.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-                    makeVerticalOutwards(0.8);
+                    setIntakePower(0.6);
                 } else if(gamepad2LeftTrigger.isCurrentlyPressed()){
-                    intake.setPower(0.6);
+                    setIntakePower(0.6);
                 } else if(gamepad2LeftTrigger.isNewlyReleased()){
-                    intake.setPower(0);
+                    setIntakePower(0);
                 } else if(gamepad2RightTrigger.isCurrentlyPressed()){
-                    intake.setPower(-0.6);
+                    setIntakePower(-0.6);
                 } else if(gamepad2RightTrigger.isNewlyReleased()){
-                    intake.setPower(0);
+                   setIntakePower(0);
                 }
-            }
 
-            updateMotor(intake);
+            updateMotor(leftIntake);
+            updateMotor(rightIntake);
 
 //            if (gamepad2.y && (floor.isPressed() || ladder.getCurrentPosition() > 4000)) {
 //                intake.setPower(0.6);
@@ -92,18 +87,6 @@ public class TeleOp extends Hardware {
 //                intake.setPower(0);
 //                intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //            }
-            // Ladder up and down
-            if (gamepad2.dpad_up && !ceiling.isPressed() && !intake.isBusy()) {
-                ladder.setPower(1);
-            } else if (gamepad2.dpad_down && !floor.isPressed() && !intake.isBusy()) {
-                ladder.setPower(-0.8);
-            } else if (!lowering || ladder.getCurrentPosition() < 1800) {
-                if(lowering) {
-                    //makeHorizontal(0.5);
-                    lowering = false;
-                }
-                ladder.setPower(0);
-            }
 
             // Bucket TODO: test the run to position thingy and get rid of magic numbers
             if(bucket.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
@@ -114,7 +97,7 @@ public class TeleOp extends Hardware {
                 } else {
                     bucket.setPower(0);
                 }
-            } else if (!ladder.isBusy()) {
+            } else if (!pulley.isBusy()) {
                 bucket.setPower(0);
                 bucket.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
@@ -123,16 +106,15 @@ public class TeleOp extends Hardware {
             if(gamepad2b.isNewlyPressed()){
                 encoderToSpecificPos(bucket,-3,0.7);
                 lowering = true;
-                ladder.setPower(-1);
+                pulley.setPower(-1);
             }
 
             updateMotor(bucket);
 
             telemetry.addData("bucket", bucket.getCurrentPosition());
-            telemetry.addData("intake", intake.getCurrentPosition());
-            telemetry.addData("ladder", ladder.getCurrentPosition());
-            telemetry.addData("ceiling sensor", ceiling.getValue());
-            telemetry.addData("floor sensor", floor.getValue());
+            telemetry.addData("leftIntake", leftIntake.getCurrentPosition());
+            telemetry.addData("rightIntake", leftIntake.getCurrentPosition());
+            telemetry.addData("ladder", pulley.getCurrentPosition());
             telemetry.addData("lowering", lowering);
            telemetry.update();
 

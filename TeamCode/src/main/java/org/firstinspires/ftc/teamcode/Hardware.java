@@ -18,13 +18,12 @@ public class Hardware extends LinearOpMode {
     // Good Luck!
     //You should put constants here
 
-    protected DcMotor frontLeft, frontRight, backLeft, backRight, carousel, ladder, intake, bucket;
-    protected TouchSensor ceiling, floor;
+    protected DcMotor leftTread, rightTread, carousel, pulley, leftIntake, rightIntake, bucket;
     static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // Needs to be fixed based on the motors
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference. Not sure what it is
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
     // TODO: Needs tuning
     static final double ARM_MOVE_REVOLUTIONS = 5;
     static final double ARM_ROTATE_REVOLUTIONS = 5;
@@ -53,16 +52,12 @@ public class Hardware extends LinearOpMode {
     public void hardwareSetup() {
 
         // Initialize driving motors
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        frontRight = hardwareMap.dcMotor.get("frontRight");
-        backRight = hardwareMap.dcMotor.get("backRight");
-        backLeft = hardwareMap.dcMotor.get("backLeft");
+        leftTread = hardwareMap.dcMotor.get("leftTread");
+        rightTread = hardwareMap.dcMotor.get("rightTread");
 
         //Set Driving Directions
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
+        leftTread.setDirection(DcMotor.Direction.REVERSE);
+        rightTread.setDirection(DcMotor.Direction.FORWARD);
 
         //Initialize and set direction of carousel motor
         carousel = hardwareMap.dcMotor.get("carousel");
@@ -70,11 +65,10 @@ public class Hardware extends LinearOpMode {
         // TODO: flip the direction if it's going backwards
         carousel.setDirection(DcMotor.Direction.FORWARD);
 
-        intake = hardwareMap.dcMotor.get("intake");
-        ladder = hardwareMap.dcMotor.get("ladder");
+        leftIntake = hardwareMap.dcMotor.get("leftIntake");
+        rightIntake = hardwareMap.dcMotor.get("rightIntake");
+        pulley = hardwareMap.dcMotor.get("ladder");
         bucket = hardwareMap.dcMotor.get("bucket");
-        ceiling = hardwareMap.touchSensor.get("ceiling");
-        floor = hardwareMap.touchSensor.get("floor");
 
         //set motor directions
 //        frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -83,35 +77,33 @@ public class Hardware extends LinearOpMode {
 //        backLeft.setDirection(DcMotor.Direction.REVERSE);
         carousel.setDirection(DcMotor.Direction.FORWARD);
         bucket.setDirection(DcMotorSimple.Direction.FORWARD);
-        intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        ladder.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        pulley.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //set all motors to actively brake when assigned power is 0
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightTread.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftTread.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        ladder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pulley.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftTread.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightTread.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bucket.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ladder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pulley.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Use encoders to regulate speed
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bucket.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ladder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        pulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //update telemetry
         telemetry.addData("Status:", "Setup Complete");
@@ -169,6 +161,10 @@ public class Hardware extends LinearOpMode {
             telemetry.update();
         }
     }
+    public void setIntakePower (double power){
+        leftIntake.setPower(power);
+        rightIntake.setPower(-power);
+    }
 
     //Careful - the while loop freezes the robot
     public void encoderToSpecificPos(DcMotor motor, int pos , double power){
@@ -187,10 +183,8 @@ public class Hardware extends LinearOpMode {
     }
 
     public void setDrivingPowers(double leftPower, double rightPower) {
-        frontLeft.setPower(leftPower);
-        backLeft.setPower(leftPower);
-        frontRight.setPower(rightPower);
-        backRight.setPower(rightPower);
+        leftTread.setPower(leftPower);
+        rightTread.setPower(rightPower);
     }
 
     public void driveForward(final double power) {
@@ -238,58 +232,6 @@ public class Hardware extends LinearOpMode {
         }
     }
 
-    //This starts the process. In a loop, call updateIntake() each cycle.
-    public void makeVerticalInwards(double power) {
-        int currentPos = intake.getCurrentPosition();
-        int rotations = currentPos / 840; //this is integer division, not exact division
-        if (currentPos < 0) {
-            rotations -= 1;
-        }
-        int goalPos = 840 * rotations;
-
-//        telemetry.addData("current",intake.getCurrentPosition());
-//        telemetry.addData("goal",goalPos);
-//        telemetry.addData("rotations", rotations );
-//        telemetry.update();
-        intake.setTargetPosition(goalPos);
-        intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intake.setPower(power);
-    }
-
-    public void makeVerticalOutwards(double power) {
-        int currentPos = intake.getCurrentPosition();
-        int rotations = currentPos / 840; //this is integer division, not exact division
-        if (currentPos < 0) {
-            rotations -= 1;
-        }
-        int goalPos = 840 * (rotations + 2);
-
-//        telemetry.addData("current",intake.getCurrentPosition());
-//        telemetry.addData("goal",goalPos);
-//        telemetry.addData("rotations", rotations );
-//        telemetry.update();
-        intake.setTargetPosition(goalPos);
-        intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intake.setPower(power);
-    }
-
-    //This starts the process. In a loop, call updateIntake() each cycle.
-    public void makeHorizontal(double power) {
-        int currentPos = intake.getCurrentPosition();
-        int ticksToMove = (int)(840 - (currentPos % (840)) + 420);
-        if(ticksToMove < 0) {
-            ticksToMove += 840;
-        }
-        int goalPos = (currentPos + ticksToMove);
-
-//        telemetry.addData("current",intake.getCurrentPosition());
-//        telemetry.addData("goal",goalPos);
-//        telemetry.addData("difference","%d - %d", COUNTS_PER_MOTOR_REV/2, (currentPos % (COUNTS_PER_MOTOR_REV/2)));
-//        telemetry.update();
-        intake.setTargetPosition(goalPos);
-        intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intake.setPower(power);
-    }
 
     //stop a motor if it's reached its position
     public void updateMotor(DcMotor motor) {
@@ -309,67 +251,44 @@ public class Hardware extends LinearOpMode {
         if (opModeIsActive()){
             //calculate and set target positions
 
-            newFRTarget = frontRight.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
-            newFLTarget = frontLeft.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
-            newBLTarget = backLeft.getCurrentPosition()     +  (backLeftInches * COUNTS_PER_INCH);
-            newBRTarget = backRight.getCurrentPosition()     + (backRightInches * COUNTS_PER_INCH);
+            newFRTarget = rightTread.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
+            newFLTarget = leftTread.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
 
-            backRight.setTargetPosition((int)(newBRTarget));
-            frontRight.setTargetPosition((int)(newFRTarget));
-            frontLeft.setTargetPosition((int)(newFLTarget));
-            backLeft.setTargetPosition((int)(newBLTarget));
+            rightTread.setTargetPosition((int)(newFRTarget));
+            leftTread.setTargetPosition((int)(newFLTarget));
 
             // Run to position
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightTread.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftTread.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // Set powers. For now I'm setting to maxPower, so be careful.
             // In the future I'd like to add some acceleration control through powers, which
             // should help with encoder accuracy. Stay tuned.
             runtime.reset();
-            frontRight.setPower(maxPower);
-            frontLeft.setPower(maxPower);
-            backRight.setPower(maxPower);
-            backLeft.setPower(maxPower);
+            rightTread.setPower(maxPower);
+            leftTread.setPower(maxPower);
 
             while (opModeIsActive() &&
-                    (frontRight.isBusy() || frontLeft.isBusy() || backRight.isBusy() || backLeft.isBusy() )) {
+                    (rightTread.isBusy() || leftTread.isBusy())) {
                 idle();
-                if(!frontRight.isBusy()){
-                    frontRight.setPower(0);
-                    frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                if(!rightTread.isBusy()){
+                    rightTread.setPower(0);
+                    rightTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 }
-                if(!frontLeft.isBusy()){
-                    frontLeft.setPower(0);
-                    frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                if(!leftTread.isBusy()){
+                    leftTread.setPower(0);
+                    leftTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
-                }
-                if(!backRight.isBusy()){
-                    backRight.setPower(0);
-                    backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
                 }
-                if(!backLeft.isBusy()){
-                    backLeft.setPower(0);
-                    backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                }
-
             }
             // Set Zero Power
-            frontRight.setPower(0);
-            frontLeft.setPower(0);
-            backRight.setPower(0);
-            backLeft.setPower(0);
+            rightTread.setPower(0);
+            leftTread.setPower(0);
 
             // Go back to Run_Using_Encoder
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
 
@@ -385,33 +304,25 @@ public class Hardware extends LinearOpMode {
         if (opModeIsActive()){
             //calculate and set target positions
 
-            newFRTarget = frontRight.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
-            newFLTarget = frontLeft.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
-            newBLTarget = backLeft.getCurrentPosition()     +  (backLeftInches * COUNTS_PER_INCH);
-            newBRTarget = backRight.getCurrentPosition()     + (backRightInches * COUNTS_PER_INCH);
+            newFRTarget = rightTread.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
+            newFLTarget = leftTread.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
 
-            backRight.setTargetPosition((int)(newBRTarget));
-            frontRight.setTargetPosition((int)(newFRTarget));
-            frontLeft.setTargetPosition((int)(newFLTarget));
-            backLeft.setTargetPosition((int)(newBLTarget));
+            rightTread.setTargetPosition((int)(newFRTarget));
+            leftTread.setTargetPosition((int)(newFLTarget));
 
             // Run to position
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightTread.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftTread.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // Set powers. For now I'm setting to maxPower, so be careful.
             // In the future I'd like to add some acceleration control through powers, which
             // should help with encoder accuracy. Stay tuned.
             runtime.reset();
-            frontRight.setPower(maxPower);
-            frontLeft.setPower(maxPower);
-            backRight.setPower(maxPower);
-            backLeft.setPower(maxPower);
+            rightTread.setPower(maxPower);
+            leftTread.setPower(maxPower);
 
             while (opModeIsActive() &&
-                    (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
+                    (rightTread.isBusy() && leftTread.isBusy())) {
                 idle();
 
 //                if(!frontRight.isBusy()){
@@ -429,16 +340,12 @@ public class Hardware extends LinearOpMode {
 
             }
             // Set Zero Power
-            frontRight.setPower(0);
-            frontLeft.setPower(0);
-            backRight.setPower(0);
-            backLeft.setPower(0);
+            rightTread.setPower(0);
+            leftTread.setPower(0);
 
             // Go back to Run_Using_Encoder
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
 

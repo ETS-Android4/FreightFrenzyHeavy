@@ -9,58 +9,51 @@ public class AutoCarouselRed extends AutoCarouselBlue {
     @Override
     public void hardwareSetup() {
         // Initialize driving motors with right and left reversed
-        frontRight = hardwareMap.dcMotor.get("frontLeft");
-        frontLeft = hardwareMap.dcMotor.get("frontRight");
-        backLeft = hardwareMap.dcMotor.get("backRight");
-        backRight = hardwareMap.dcMotor.get("backLeft");
+        rightTread = hardwareMap.dcMotor.get("frontLeft");
+        leftTread = hardwareMap.dcMotor.get("frontRight");
 
         //Set Driving Directions
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        rightTread.setDirection(DcMotor.Direction.REVERSE);
+        leftTread.setDirection(DcMotor.Direction.FORWARD);
 
 
         //Initialize and set direction of carousel motor
         carousel = hardwareMap.dcMotor.get("carousel");
         carousel.setDirection(DcMotor.Direction.REVERSE);
 
-        intake = hardwareMap.dcMotor.get("intake");
-        ladder = hardwareMap.dcMotor.get("ladder");
+        leftIntake = hardwareMap.dcMotor.get("intake");
+        rightIntake = hardwareMap.dcMotor.get("intake");
+        pulley = hardwareMap.dcMotor.get("ladder");
         bucket = hardwareMap.dcMotor.get("bucket");
-        ceiling = hardwareMap.touchSensor.get("ceiling");
-        floor = hardwareMap.touchSensor.get("floor");
 
         bucket.setDirection(DcMotorSimple.Direction.FORWARD);
-        intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        ladder.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightIntake.setDirection(DcMotorSimple.Direction.FORWARD);
+        pulley.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //set all motors to actively brake when assigned power is 0
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightTread.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftTread.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        ladder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pulley.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftTread.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightTread.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bucket.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ladder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pulley.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Use encoders to regulate speed
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bucket.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ladder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        pulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //update telemetry
         telemetry.addData("Status:", "Setup Complete");

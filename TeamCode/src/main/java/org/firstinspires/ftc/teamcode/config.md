@@ -1,13 +1,13 @@
-Expansion Hub:
-    Motors:
-        Port 0: NeveRest 40 - carousel
-        Port 1: NeveRest 40 - bucket
-        Port 2: NeveRest 60 - intake
-        Port 3: NeveRest 60 - ladder
-
 Control Hub:
     Motors:
-        Port 0: NeveRest 60 - backLeft
-        Port 1: NeveRest 60 - frontLeft
-        Port 2: NeveRest 60 - frontRight
-        Port 3: NeveRest 60 - backRight
+        Port 0: NeveRest 60 - rightTread
+        Port 1: NeveRest 60 - leftTread
+        Port 2: Tetrix      - rightIntake
+        Port 3: empty
+
+Expansion Hub:
+    Motors:
+        Port 0: empty
+        Port 1: Tetrix      - leftIntake
+        Port 2: empty
+        Port 3: empty
