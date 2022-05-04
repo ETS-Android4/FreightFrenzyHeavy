@@ -67,7 +67,7 @@ public class Hardware extends LinearOpMode {
 
         leftIntake = hardwareMap.dcMotor.get("leftIntake");
         rightIntake = hardwareMap.dcMotor.get("rightIntake");
-        pulley = hardwareMap.dcMotor.get("ladder");
+        pulley = hardwareMap.dcMotor.get("pulley");
         bucket = hardwareMap.dcMotor.get("bucket");
 
         //set motor directions
