@@ -56,8 +56,8 @@ public class Hardware extends LinearOpMode {
         rightTread = hardwareMap.dcMotor.get("rightTread");
 
         //Set Driving Directions
-        leftTread.setDirection(DcMotor.Direction.REVERSE);
-        rightTread.setDirection(DcMotor.Direction.FORWARD);
+        leftTread.setDirection(DcMotor.Direction.FORWARD);
+        rightTread.setDirection(DcMotor.Direction.REVERSE);
 
         //Initialize and set direction of carousel motor
         carousel = hardwareMap.dcMotor.get("carousel");
