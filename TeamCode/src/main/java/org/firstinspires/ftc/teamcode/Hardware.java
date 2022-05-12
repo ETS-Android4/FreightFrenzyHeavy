@@ -35,9 +35,6 @@ public class Hardware extends LinearOpMode {
     static final double CAROUSEL_DIAMETER_INCHES = 3; //Might need to be adjusted
     static final double CAROUSEL_MOTOR_REVOLUTIONS = CAROUSEL_INCHES_TO_TURN / (CAROUSEL_DIAMETER_INCHES * Math.PI); */
 
-
-
-
     public ElapsedTime runtime = new ElapsedTime();
 
     private BNO055IMU imu;
@@ -350,6 +347,9 @@ public class Hardware extends LinearOpMode {
 
 
     }
+
+
+
     // Last thing is an empty runOpMode because it's a linearopmode
     @Override
     public void runOpMode() throws InterruptedException {
