@@ -7,7 +7,7 @@ Control Hub:
 
 Expansion Hub:
     Motors:
-        Port 0: empty
+        Port 0: pulley      - pulley - NeverRest 40:1 // not yet on the phone config
         Port 1: Tetrix      - leftIntake
         Port 2: empty
         Port 3: empty
