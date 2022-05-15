@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -18,7 +19,8 @@ public class Hardware extends LinearOpMode {
     // Good Luck!
     //You should put constants here
 
-    protected DcMotor leftTread, rightTread, carousel, pulley, leftIntake, rightIntake, bucket;
+    protected DcMotor leftTread, rightTread, carousel, pulley, leftIntake, rightIntake;
+    protected Servo leftBucket, rightBucket;
     static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // Needs to be fixed based on the motors
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference. Not sure what it is
@@ -65,7 +67,8 @@ public class Hardware extends LinearOpMode {
         leftIntake = hardwareMap.dcMotor.get("leftIntake");
         rightIntake = hardwareMap.dcMotor.get("rightIntake");
         pulley = hardwareMap.dcMotor.get("pulley");
-        bucket = hardwareMap.dcMotor.get("bucket");
+        leftBucket = hardwareMap.servo.get("leftBucket");
+        rightBucket = hardwareMap.servo.get("rightBucket");
 
         //set motor directions
 //        frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -73,7 +76,8 @@ public class Hardware extends LinearOpMode {
 //        backRight.setDirection(DcMotor.Direction.FORWARD);
 //        backLeft.setDirection(DcMotor.Direction.REVERSE);
         carousel.setDirection(DcMotor.Direction.FORWARD);
-        bucket.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBucket.setDirection(Servo.Direction.FORWARD);
+        rightBucket.setDirection(Servo.Direction.REVERSE);
         leftIntake.setDirection(DcMotorSimple.Direction.FORWARD);
         rightIntake.setDirection(DcMotorSimple.Direction.FORWARD);
         pulley.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -82,14 +86,12 @@ public class Hardware extends LinearOpMode {
         rightTread.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftTread.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        bucket.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         pulley.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftTread.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightTread.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bucket.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pulley.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -97,7 +99,6 @@ public class Hardware extends LinearOpMode {
         //Use encoders to regulate speed
         leftTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightTread.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bucket.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         pulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -348,6 +349,10 @@ public class Hardware extends LinearOpMode {
 
     }
 
+    public void setBucketPosition(double bucketPosition){
+        leftBucket.setPosition(bucketPosition);
+        rightBucket.setPosition(bucketPosition);
+    }
 
 
     // Last thing is an empty runOpMode because it's a linearopmode

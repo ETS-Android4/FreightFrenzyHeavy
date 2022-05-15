@@ -50,14 +50,27 @@ public class TeleOp extends Hardware {
             setDrivingPowers(-gamepad1.left_stick_y,-gamepad1.right_stick_y);
 
             //carousel
-            if (gamepad2.a) {
+            if (gamepad1.a) {
                 carousel.setPower(1);
             } else{
                 carousel.setPower(0);
             }
 
+            //bucket
+            if (gamepad2.x){
+                setBucketPosition(0.75);
+            } else if (gamepad2.y){
+                setBucketPosition(0.25);
+            }
 
-            telemetry.addData("bucket", bucket.getCurrentPosition());
+            //pulley
+            if (gamepad2.dpad_up){
+                pulley.setPower(0.5);
+            } else if (gamepad2.dpad_down){
+                pulley.setPower(-.5);
+            } else { pulley.setPower(0);}
+
+            //telemetry
             telemetry.addData("leftIntake", leftIntake.getCurrentPosition());
             telemetry.addData("rightIntake", rightIntake.getCurrentPosition());
             telemetry.addData("pulley", pulley.getCurrentPosition());
