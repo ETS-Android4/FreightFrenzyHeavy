@@ -71,6 +71,7 @@ public class TeleOp extends Hardware {
             } else { pulley.setPower(0);}
 
             //telemetry
+            telemetry.addData("carousel power", carousel.getPower());
             telemetry.addData("leftIntake", leftIntake.getCurrentPosition());
             telemetry.addData("rightIntake", rightIntake.getCurrentPosition());
             telemetry.addData("pulley", pulley.getCurrentPosition());
