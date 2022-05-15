@@ -33,9 +33,17 @@ public class TeleOp extends Hardware {
 
             //turn intake on/off when button A is pressed
             if(gamepad2a.isNewlyPressed()) {
-                if(tryingToGrab) setIntakePower(0);
-                else setIntakePower(0.5);
                 tryingToGrab = !tryingToGrab;
+            }
+
+            //push freight out when B is held down
+            if(gamepad2.b) {
+                setIntakePower(-0.3);
+                tryingToGrab = false;
+            } else if (tryingToGrab) {
+                setIntakePower(0.3);
+            } else {
+                setIntakePower(0);
             }
 
             // Tank drive
@@ -53,6 +61,7 @@ public class TeleOp extends Hardware {
             telemetry.addData("leftIntake", leftIntake.getCurrentPosition());
             telemetry.addData("rightIntake", rightIntake.getCurrentPosition());
             telemetry.addData("pulley", pulley.getCurrentPosition());
+            telemetry.addData("tryingtograb",tryingToGrab);
             telemetry.update();
 
         }
