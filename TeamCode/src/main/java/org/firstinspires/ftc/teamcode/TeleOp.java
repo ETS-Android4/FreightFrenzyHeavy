@@ -51,7 +51,7 @@ public class TeleOp extends Hardware {
 
             //carousel
             if (gamepad1.a) {
-                carousel.setPower(1);
+                carousel.setPower(-1);
             } else{
                 carousel.setPower(0);
             }

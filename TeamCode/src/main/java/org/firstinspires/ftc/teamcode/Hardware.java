@@ -239,21 +239,19 @@ public class Hardware extends LinearOpMode {
         }
     }
 
-    public void encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
+    public void encoderDrive(double maxPower, double rightInches, double leftInches){
         // stop and reset the encoders? Maybe not. Might want to get position and add from there
-        double newFRTarget;
-        double newFLTarget;
-        double newBLTarget;
-        double newBRTarget;
+        double rightTarget;
+        double leftTarget;
 
         if (opModeIsActive()){
             //calculate and set target positions
 
-            newFRTarget = rightTread.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
-            newFLTarget = leftTread.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
+            rightTarget = rightTread.getCurrentPosition()     +  (rightInches * COUNTS_PER_INCH);
+            leftTarget = leftTread.getCurrentPosition()     +  (leftInches * COUNTS_PER_INCH);
 
-            rightTread.setTargetPosition((int)(newFRTarget));
-            leftTread.setTargetPosition((int)(newFLTarget));
+            rightTread.setTargetPosition((int)(rightTarget));
+            leftTread.setTargetPosition((int)(leftTarget));
 
             // Run to position
             rightTread.setMode(DcMotor.RunMode.RUN_TO_POSITION);
